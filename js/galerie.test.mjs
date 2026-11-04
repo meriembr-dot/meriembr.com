@@ -1,4 +1,4 @@
-// js/galerie.test.mjs : lancer avec node --test js/
+// js/galerie.test.mjs : lancer avec node --test js/*.test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { lireHash, visibles, voisin } from "./galerie.js";
