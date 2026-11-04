@@ -17,10 +17,11 @@ Contraintes :
 
 | Sujet | Décision |
 |---|---|
-| Direction | Travaux en vedette (Studio Feixen, Gatzara) + touche personnelle (abiemaxey, Shristi, Ria) |
+| Direction | **Ludique illustré** (riamehta.co.in), travaux en grille (Studio Feixen). Révisée le 2026-11-04 : la direction éditoriale crème/taupe a été jugée trop sage |
 | Présentation des travaux | Grille + filtres par catégorie + visionneuse, sans texte par projet |
-| Touche personnelle | Dessin ou avatar fourni par Meriem |
-| Couleurs | Issues du logo ; les travaux apportent la couleur |
+| Éléments dessinés | SVG simples dessinés par Claude (vagues, étoiles, spirales, nuage, chemin, icônes) ; Meriem fournit seulement son avatar |
+| Couleurs | Crème + orange, indigo, teal (section 4) |
+| Polices | Caveat (titres manuscrits) + Quicksand (texte) |
 | Nom affiché | **Meriem Ben Rejeb** partout (le logo actuel porte « Myriame » : à mettre à jour par elle) |
 | Contenu gardé | FR + EN, logos clients, téléphone, WhatsApp, Instagram, e-mail |
 | Technique | HTML, CSS, JS sans framework (option 1) |
@@ -31,13 +32,13 @@ Références analysées le 2026-11-04 : abiemaxey.com/hello2, builtbyshristi.com
 
 Une page par langue : `index.html` (FR), `en/index.html` (EN). Navigation par ancres.
 
-1. **Menu flottant** : pilule fixe en haut. Monogramme M, Travaux, Parcours, Contact, bascule FR/EN. Mobile : monogramme + bouton « Menu » ouvrant un panneau plein écran.
-2. **Accueil** : titre très gros « Meriem *Ben Rejeb* », sous-titre « Graphic designer », une phrase d'accroche. Le haut de la grille des travaux est visible sous la ligne de flottaison.
-3. **Travaux** : filtres, grille, visionneuse (section 5).
-4. **Bandeau défilant** : logo, identité visuelle, packaging, édition, PLV, web, gaming.
-5. **À propos et parcours** : dessin de Meriem, texte de présentation actuel raccourci, frise 2005 à aujourd'hui en HTML (remplace `img/timeline-fr.png` et `img/timeline-en.png`).
-6. **Ils m'ont fait confiance** : 34 logos clients en grille, niveaux de gris, couleur au survol.
-7. **Contact** : section sombre. E-mail en grand (`mailto:contact@meriembr.com`), téléphone (`tel:`), WhatsApp (`https://wa.me/33695368115`), Instagram (`@mbr.graphic.designer`), Sèvres.
+1. **Menu flottant** : pilule crème fixe en haut, bordure épaisse indigo. Monogramme M, Travaux, Parcours, Contact, bascule FR/EN. Élément actif souligné par un gribouillis orange SVG. Mobile : monogramme + bouton « Menu » ouvrant un panneau plein écran.
+2. **Accueil** : « *hello!* » en Caveat orange, « Je suis Meriem Ben Rejeb, graphiste » en gros, avatar de Meriem détouré à droite entouré d'étoiles et d'une spirale. Vague orange en bas de section. Le haut de la grille des travaux est visible sous la ligne de flottaison.
+3. **Travaux** : titre « *Travaux* » avec spirale indigo ; filtres, grille, visionneuse (section 5).
+4. **Ce que je fais** : fond teal, 4 cartes avec icône SVG dessinée (Identité visuelle, Packaging, Édition, PLV et Web). Inspiration : « How do I do that? » de Ria.
+5. **À propos et parcours** : avatar, texte de présentation actuel raccourci, puis **chemin sinueux SVG** (trait indigo épais) portant les 7 étapes de la frise en bulles (remplace `img/timeline-fr.png` et `img/timeline-en.png`). Mobile : chemin vertical.
+6. **Ils m'ont fait confiance** : 34 logos clients dans des pastilles rondes, petites étoiles autour du titre.
+7. **Contact** : fond teal, vague orange au-dessus, grand nuage SVG crème contenant : e-mail en grand (`mailto:contact@meriembr.com`), téléphone (`tel:`), WhatsApp (`https://wa.me/33695368115`), Instagram (`@mbr.graphic.designer`), Sèvres.
 
 Retirés : blocs « Content Writing / Web Development / Business Consultancy » (texte Lorem ipsum en commentaire), compteurs, carrousel.
 
@@ -57,29 +58,34 @@ Retirés : blocs « Content Writing / Web Development / Business Consultancy » 
 
 ### Couleurs (contrastes calculés, WCAG AA = 4,5:1 pour le texte courant)
 
-| Rôle | Valeur | Contraste sur `#F6F2EC` | Usage |
+| Rôle | Valeur | Contraste sur `#FFF8EE` | Usage |
 |---|---|---|---|
-| `--fond` | `#F6F2EC` | | Fond général |
-| `--texte` | `#1F1B18` | 15,33 | Titres, texte |
-| `--taupe` | `#8F7C70` | 3,56 | Décor uniquement (filets, pictos, grandes typos décoratives), jamais du texte courant |
-| `--taupe-fonce` | `#6E5D52` | 5,62 | Liens, sous-titres, filtre actif |
-| `--bleu` | `#5E6B85` | 4,81 | Touches de couleur, texte possible |
-| `--bleu-aplat` | `#DCE3EF` | texte `#1F1B18` : 13,25 | Fond de la section Parcours |
-| `--tuile` | `#ECE7E0` | | Fond derrière chaque vignette |
-| Section Contact | fond `#1F1B18`, texte `#F6F2EC` | 15,33 | |
-
-Le monogramme M et sa tache d'aquarelle (extraits de `img/mbr-logo.png`) servent de motif derrière le titre d'accueil et d'icône de site.
+| `--fond` | `#FFF8EE` | | Fond général |
+| `--texte` | `#2A2440` | 13,98 | Titres, texte |
+| `--orange` | `#F26A1B` | 2,91 | Décor uniquement (vagues, « hello! », soulignements), jamais du texte courant |
+| `--indigo` | `#4B4FD8` | 5,84 | Liens, bordures, filtre actif, chemin du parcours |
+| `--teal` | `#1F6F7A` | crème dessus : 5,51 | Fond des sections Ce que je fais et Contact |
+| `--tuile` | `#F3EBDD` (à vérifier au rendu) | | Fond derrière chaque vignette |
 
 ### Typographie
 
-- **Archivo** (titres et texte), axes graisse et largeur, graisse Black pour le titre d'accueil.
-- **Playfair Display Italique**, un mot accent par titre (« Meriem *Ben Rejeb* », « Ils m'ont fait *confiance* »).
+- **Caveat** Bold pour les titres et accroches manuscrites.
+- **Quicksand** pour le texte courant, 17 px, interligne 1,6.
+- Combinaison « Handwritten Charm » proposée par UI UX Pro Max.
 - Polices auto-hébergées en woff2 dans `fonts/`, aucun appel à Google Fonts.
-- Texte courant 17 px, interligne 1,6. Titre d'accueil `clamp()` d'environ 56 px (mobile) à 160 px (grand écran).
+- Titre d'accueil `clamp()` d'environ 48 px (mobile) à 120 px (grand écran).
+
+### Éléments SVG dessinés
+
+Vague, étoile 5 branches, spirale, soulignement gribouillé, nuage, chemin sinueux, 4 icônes de métier. Trait volontairement irrégulier, effet « dessiné main ». SVG en ligne, couleurs par `currentColor` ou variables CSS.
+
+### Formes et effets
+
+Cartes à coins arrondis (16 px), bordure fine, badge de catégorie façon autocollant, rotation ±2° au survol.
 
 ### Animations
 
-Fondu à l'apparition au scroll (`IntersectionObserver`), bandeau défilant en CSS, léger agrandissement des vignettes au survol. Tout est désactivé sous `prefers-reduced-motion: reduce`. Pas de GSAP ni de three.js.
+Vague qui ondule, étoiles en rotation lente, chemin du parcours qui se dessine au scroll (`stroke-dashoffset` + `IntersectionObserver`), fondu à l'apparition. Tout est désactivé sous `prefers-reduced-motion: reduce`. Pas de GSAP ni de three.js.
 
 ## 5. Travaux : grille, filtres, visionneuse
 
@@ -93,8 +99,8 @@ Fondu à l'apparition au scroll (`IntersectionObserver`), bandeau défilant en C
 
 - Carrés : 2 colonnes (mobile), 3 (tablette), 5 (grand écran).
 - 1 à 2 images par catégorie en double taille (2 × 2), choisies par le champ `"grand": true` de `data/travaux.json`.
-- Fond `--tuile` derrière chaque vignette.
-- Survol : légende (catégorie, client si connu), léger agrandissement.
+- Cartes arrondies, fond `--tuile` derrière chaque vignette.
+- Survol : légende (catégorie, client si connu), rotation ±2°.
 - Ordre : catégories dans l'ordre de l'ancien site (`logos`, `visual_identity`, `flyers_leaflets`, `books_magazines`, `packaging_labels`, `various`, `web`, `pos_panels_dressing`, `gaming`), puis numéro en tête de nom de fichier.
 
 ### Filtres
@@ -148,7 +154,7 @@ img/portfolio/...      originaux repris de main
 img/min/...            miniatures WebP générées
 img/testimonial/...    logos clients repris de main
 pdf/...                repris de main
-fonts/                 Archivo, Playfair Display (woff2)
+fonts/                 Caveat, Quicksand (woff2)
 outils/miniatures.py   génère img/min/ et data/travaux.json
 CNAME, .nojekyll
 ```
@@ -165,7 +171,7 @@ Supprimés : `css/` et `js/` de l'ancien template (Bootstrap, jQuery, 15 plugins
 
 ## 9. À fournir ou valider par Meriem
 
-1. Dessin ou avatar pour « À propos » (emplacement provisoire marqué en attendant).
+1. Avatar détouré (PNG transparent ou SVG) pour l'accueil et « À propos » (emplacement provisoire marqué en attendant).
 2. Frise : situation après 2020 (« Freelance, aujourd'hui » est-il toujours vrai ?).
 3. Numéro au format international pour WhatsApp (`+33 6 95 36 81 15` supposé).
 4. Noms des clients par travail (`travaux.json`).
