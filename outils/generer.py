@@ -3,6 +3,7 @@
 Lancer depuis la racine du dépôt : python3 -I outils/generer.py [racine]
 Source éditable : data/travaux.json (client, grand).
 """
+import html
 import json
 import re
 import sys
@@ -85,6 +86,48 @@ def injecter(texte, nom, contenu):
     return texte[:a] + contenu + texte[b:]
 
 
+def libelle(cle, langue):
+    for c, fr, en in CATEGORIES:
+        if c == cle:
+            return fr if langue == "fr" else en
+    raise KeyError(cle)
+
+
+def rendu_filtres(travaux, langue):
+    tout = "Tout" if langue == "fr" else "All"
+    boutons = [f'<button type="button" class="pilule" data-cat="tout" aria-pressed="true">{tout} ({len(travaux)})</button>']
+    for cle, _, _ in CATEGORIES:
+        n = sum(t["categorie"] == cle for t in travaux)
+        if n:
+            boutons.append(f'<button type="button" class="pilule" data-cat="{cle}" aria-pressed="false">{html.escape(libelle(cle, langue))} ({n})</button>')
+    return "\n" + "\n".join(boutons) + "\n"
+
+
+def rendu_travaux(travaux, langue, prefixe, racine=Path(".")):
+    e = lambda s: html.escape(s, quote=True)
+    lignes = []
+    for t in travaux:
+        larg, haut = Image.open(racine / t["min"]).size
+        alt = libelle(t["categorie"], langue) + (f', {t["client"]}' if t["client"] else "")
+        pdf = f' data-pdf="{e(prefixe + t["pdf"])}"' if t["pdf"] else ""
+        classe = "vignette grand" if t["grand"] else "vignette"
+        lignes.append(
+            f'<li class="{classe}" data-cat="{t["categorie"]}"><a href="{e(prefixe + t["fichier"])}"{pdf}>'
+            f'<img src="{e(prefixe + t["min"])}" width="{larg}" height="{haut}" alt="{e(alt)}" loading="lazy" decoding="async">'
+            f'</a></li>')
+    return "\n" + "\n".join(lignes) + "\n"
+
+
+def rendu_clients(clients, prefixe):
+    e = lambda s: html.escape(s, quote=True)
+    return "\n" + "\n".join(
+        f'<li><img src="{e(prefixe + c["logo"])}" alt="{e(c["nom"])}" width="120" height="120" loading="lazy"></li>'
+        for c in clients) + "\n"
+
+
+PAGES = [("index.html", "fr", ""), ("en/index.html", "en", "../")]
+
+
 def main(racine=Path(".")):
     travaux = charger_travaux(racine)
     for t in travaux:
@@ -94,7 +137,18 @@ def main(racine=Path(".")):
     (racine / "data").mkdir(exist_ok=True)
     (racine / "data/travaux.json").write_text(
         json.dumps(travaux, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
-    print(len(travaux), "travaux")
+    clients = json.loads((racine / "data/clients.json").read_text(encoding="utf-8"))
+    for page, langue, prefixe in PAGES:
+        f = racine / page
+        if not f.exists():
+            print("absent, ignoré :", page)
+            continue
+        h = f.read_text(encoding="utf-8")
+        h = injecter(h, "filtres", rendu_filtres(travaux, langue))
+        h = injecter(h, "travaux", rendu_travaux(travaux, langue, prefixe, racine))
+        h = injecter(h, "clients", rendu_clients(clients, prefixe))
+        f.write_text(h, encoding="utf-8")
+    print(len(travaux), "travaux,", len(clients), "clients")
     return travaux
 
 

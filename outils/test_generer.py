@@ -71,6 +71,41 @@ def test_miniature_gif_anime():
         assert max(out.size) <= 600
 
 
+def _travaux_exemple():
+    return [
+        {"fichier": "img/portfolio/logos/1-a.jpg", "min": "img/min/logos/1-a.webp",
+         "categorie": "logos", "client": "A & B", "grand": True, "pdf": None},
+        {"fichier": "img/portfolio/books_magazines/3-c.jpg", "min": "img/min/books_magazines/3-c.webp",
+         "categorie": "books_magazines", "client": "", "grand": False, "pdf": "pdf/books_magazines/3-c.pdf"},
+    ]
+
+
+def test_rendu_filtres():
+    h = g.rendu_filtres(_travaux_exemple(), "fr")
+    assert 'data-cat="tout" aria-pressed="true"' in h and "Tout (2)" in h
+    assert "Logos (1)" in h and "Livres et magazines (1)" in h
+    assert "Gaming" not in h  # catégorie vide non affichée
+
+
+def test_rendu_travaux():
+    with tempfile.TemporaryDirectory() as d:
+        r = Path(d)
+        for t in _travaux_exemple():
+            (r / t["min"]).parent.mkdir(parents=True, exist_ok=True)
+            Image.new("RGB", (500, 400)).save(r / t["min"], "WEBP")
+        h = g.rendu_travaux(_travaux_exemple(), "en", "../", r)
+    assert '<li class="vignette grand" data-cat="logos">' in h
+    assert 'src="../img/min/logos/1-a.webp" width="500" height="400"' in h
+    assert 'alt="Logos, A &amp; B"' in h
+    assert 'alt="Books and magazines"' in h
+    assert 'data-pdf="../pdf/books_magazines/3-c.pdf"' in h
+
+
+def test_rendu_clients():
+    h = g.rendu_clients([{"logo": "img/testimonial/l'ile.jpg", "nom": "L'île"}], "")
+    assert "src=\"img/testimonial/l&#x27;ile.jpg\"" in h and 'alt="L&#x27;île"' in h
+
+
 if __name__ == "__main__":
     for nom, f in list(globals().items()):
         if nom.startswith("test_"):

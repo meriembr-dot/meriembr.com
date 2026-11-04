@@ -1,6 +1,7 @@
 """Liste les liens locaux cassés (src, href, url()) des pages et CSS donnés.
 Lancer : python3 -I outils/verifier.py index.html en/index.html css/site.css
 Code de sortie 1 si un lien est cassé."""
+import html
 import re
 import sys
 import urllib.parse
@@ -10,7 +11,7 @@ casses = []
 for f in map(Path, sys.argv[1:]):
     texte = f.read_text(encoding="utf-8")
     for m in re.finditer(r'(?:src|href)="([^"]+)"|url\(["\']?([^"\')]+)', texte):
-        u = m.group(1) or m.group(2)
+        u = html.unescape(m.group(1) or m.group(2))
         if re.match(r"(https?:|mailto:|tel:|data:|#)", u):
             continue
         chemin = urllib.parse.unquote(u.split("#")[0].split("?")[0])
