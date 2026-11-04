@@ -15,12 +15,12 @@ function filtrer(cat) {
 
 boutons.forEach((b) => b.addEventListener("click", () => {
   const cat = b.dataset.cat;
-  history.pushState(null, "", cat === "tout" ? "#travaux" : `#travaux/${cat}`);
+  history.pushState(null, "", cat === "tout" ? "#toutes" : `#travaux/${cat}`);
   filtrer(cat);
 }));
 addEventListener("popstate", () => filtrer(lireHash(location.hash)));
 filtrer(lireHash(location.hash));
-if (location.hash.startsWith("#travaux/")) document.getElementById("travaux").scrollIntoView();
+if (location.hash.startsWith("#travaux/")) document.getElementById("toutes").scrollIntoView();
 
 /* Visionneuse */
 const vis = document.getElementById("visionneuse");
@@ -43,15 +43,29 @@ function afficher() {
   if (lien.dataset.pdf) visPdf.href = lien.dataset.pdf;
 }
 
-grille.addEventListener("click", (e) => {
-  const lien = e.target.closest(".vignette a");
-  if (!lien || e.ctrlKey || e.metaKey || e.shiftKey) return;
-  e.preventDefault();
+function ouvrir(vignette, depuis) {
   liste = visibles(items, courant);
-  pos = liste.indexOf(vignettes.indexOf(lien.parentElement));
-  origine = lien;
+  pos = liste.indexOf(vignettes.indexOf(vignette));
+  origine = depuis;
   afficher();
   vis.showModal();
+}
+
+const modifie = (e) => e.ctrlKey || e.metaKey || e.shiftKey;
+grille.addEventListener("click", (e) => {
+  const lien = e.target.closest(".vignette a");
+  if (!lien || modifie(e)) return;
+  e.preventDefault();
+  ouvrir(lien.parentElement, lien);
+});
+document.getElementById("selection").addEventListener("click", (e) => {
+  const projet = e.target.closest(".projet");
+  if (!projet || modifie(e)) return;
+  const cible = vignettes.find((v) => v.querySelector("a").getAttribute("href") === projet.getAttribute("href"));
+  if (!cible) return;
+  e.preventDefault();
+  filtrer("tout");
+  ouvrir(cible, projet);
 });
 const pas = (n) => { pos = voisin(pos, liste.length, n); afficher(); };
 vis.querySelector(".vis-prec").addEventListener("click", () => pas(-1));
@@ -83,21 +97,35 @@ menu.addEventListener("click", (e) => {
   if (e.target.closest("a")) { menu.classList.remove("ouvert"); menuBouton.setAttribute("aria-expanded", "false"); }
 });
 
-/* Apparitions et tracé du chemin */
-const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const trait = document.getElementById("chemin-trait");
-if (!calme && trait) {
-  trait.style.strokeDasharray = 1;
-  trait.style.strokeDashoffset = 1;
-  const dessiner = () => {
-    const r = trait.closest(".chemin").getBoundingClientRect();
-    const avance = Math.min(1, Math.max(0, (innerHeight * 0.8 - r.top) / r.height));
-    trait.style.strokeDashoffset = 1 - avance;
-  };
-  addEventListener("scroll", dessiner, { passive: true });
-  dessiner();
-}
+/* Apparitions */
 const obs = new IntersectionObserver((entrees) => entrees.forEach((e) => {
   if (e.isIntersecting) { e.target.classList.add("vu"); obs.unobserve(e.target); }
 }), { threshold: 0.15 });
 document.querySelectorAll(".visible-au-scroll").forEach((el) => obs.observe(el));
+
+/* Yeux et curseur : souris seulement, coupés si mouvement réduit */
+const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
+if (!calme && !matchMedia("(hover: none)").matches) {
+  const pupilles = [...document.querySelectorAll(".pupille")];
+  const svg = document.querySelector(".avatar svg");
+  const curseur = document.querySelector(".curseur");
+  const voir = document.documentElement.lang === "en" ? "View" : "Voir";
+  addEventListener("pointermove", (e) => {
+    curseur.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+    curseur.classList.add("actif");
+    const m = svg.getScreenCTM();
+    if (!m) return;
+    const p = new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse());
+    // Une seule direction pour les deux yeux, depuis le milieu des yeux : regard parallèle, jamais convergent.
+    const a = Math.atan2(p.y - 379, p.x - 647);
+    const d = Math.min(1, Math.hypot(p.x - 647, p.y - 379) / 400);
+    const t = `translate(${Math.cos(a) * d * 16} ${Math.sin(a) * d * 5})`;
+    for (const o of pupilles) o.setAttribute("transform", t);
+  });
+  document.documentElement.addEventListener("pointerleave", () => curseur.classList.remove("actif"));
+  addEventListener("pointerover", (e) => {
+    const grand = !!e.target.closest(".projet, .vignette a");
+    curseur.classList.toggle("grand", grand);
+    curseur.textContent = grand ? voir : "";
+  });
+}
