@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /docs/
+Disallow: /outils/
+Disallow: /data/
+Sitemap: https://meriembr.com/sitemap.xml
