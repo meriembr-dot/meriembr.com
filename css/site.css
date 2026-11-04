@@ -1,0 +1,31 @@
+@font-face { font-family: "Caveat"; src: url("../fonts/caveat.woff2") format("woff2"); font-weight: 400 700; font-display: swap; }
+@font-face { font-family: "Quicksand"; src: url("../fonts/quicksand.woff2") format("woff2"); font-weight: 300 700; font-display: swap; }
+
+:root {
+  --fond: #FFF8EE; --texte: #2A2440; --orange: #F26A1B; --indigo: #4B4FD8;
+  --teal: #1F6F7A; --tuile: #F3EBDD; --rayon: 16px;
+  --police-titre: "Caveat", cursive; --police-texte: "Quicksand", system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
+body { margin: 0; background: var(--fond); color: var(--texte); font: 500 1.0625rem/1.6 var(--police-texte); overflow-x: hidden; }
+img, svg { display: block; max-width: 100%; }
+a { color: var(--indigo); text-underline-offset: .2em; }
+:focus-visible { outline: 3px solid var(--indigo); outline-offset: 3px; border-radius: 6px; }
+.conteneur { width: min(1200px, 100% - 2rem); margin-inline: auto; }
+.titre { font: 700 clamp(2.5rem, 6vw, 4.5rem)/1 var(--police-titre); margin: 0 0 1.5rem; }
+.accroche { font-family: var(--police-titre); color: var(--orange); font-weight: 700; }
+.pilule { display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; padding: .4rem 1.1rem; border: 2px solid var(--indigo); border-radius: 999px; background: var(--fond); color: var(--texte); font: 600 1rem var(--police-texte); cursor: pointer; text-decoration: none; }
+.pilule[aria-pressed="true"] { background: var(--indigo); color: var(--fond); }
+.carte { background: var(--fond); border: 2px solid var(--texte); border-radius: var(--rayon); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.lien-evitement { position: absolute; left: 1rem; top: -4rem; z-index: 100; }
+.lien-evitement:focus { top: 1rem; }
+.icone { width: 1.5em; height: 1.5em; flex: none; }
+.visible-au-scroll { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+.visible-au-scroll.vu { opacity: 1; transform: none; }
+.no-js .visible-au-scroll { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .visible-au-scroll { opacity: 1; transform: none; }
+}

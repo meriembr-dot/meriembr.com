@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="vague" viewBox="0 0 1200 60" preserveAspectRatio="none">
+    <path d="M0 30 Q 50 2 100 30 T 200 30 T 300 30 T 400 30 T 500 30 T 600 30 T 700 30 T 800 30 T 900 30 T 1000 30 T 1100 30 T 1200 30" fill="none" stroke="currentColor" stroke-width="14" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="etoile" viewBox="0 0 100 100">
+    <path d="M50 6 L61 38 L95 39 L67 59 L78 93 L50 72 L21 92 L32 59 L5 38 L39 37 Z" fill="currentColor" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="spirale" viewBox="0 0 100 100">
+    <path d="M52 50 C52 46 46 45 45 50 C44 57 55 59 58 51 C62 41 48 35 41 43 C32 53 42 67 55 66 C70 64 74 45 64 35 C52 23 30 28 27 47 C24 68 43 81 61 76" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="gribouillis" viewBox="0 0 200 24" preserveAspectRatio="none">
+    <path d="M4 16 C40 6 70 20 100 12 S 160 6 196 14 M14 20 C60 12 120 22 186 16" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="nuage" viewBox="0 0 600 400" preserveAspectRatio="none">
+    <path d="M110 330 C40 330 20 260 70 230 C40 170 100 120 160 140 C180 70 270 50 320 100 C360 50 460 60 470 140 C550 140 590 220 540 270 C580 320 530 370 470 350 C430 390 330 390 300 360 C250 395 160 390 140 345 C130 340 120 332 110 330 Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="m-identite" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="22" fill="none" stroke="currentColor" stroke-width="4"/>
+    <path d="M22 40 L28 22 L36 34 L42 22 L44 40" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="m-packaging" viewBox="0 0 64 64">
+    <path d="M12 22 L32 12 L52 22 L52 46 L32 56 L12 46 Z M12 22 L32 32 L52 22 M32 32 L32 56" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="m-edition" viewBox="0 0 64 64">
+    <path d="M8 16 C18 12 26 13 32 18 C38 13 46 12 56 16 L56 50 C46 46 38 47 32 52 C26 47 18 46 8 50 Z M32 18 L32 52" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="m-plv-web" viewBox="0 0 64 64">
+    <rect x="8" y="12" width="48" height="32" rx="4" fill="none" stroke="currentColor" stroke-width="4"/>
+    <path d="M24 54 L40 54 M32 44 L32 54 M16 22 L30 22 M16 30 L40 30" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><path d="M3 6h18v12H3z M3 7l9 6 9-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-tel" viewBox="0 0 24 24"><path d="M6 3h4l2 5-3 2a12 12 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 4 5a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M4 20l1.4-4.2A8 8 0 1 1 8.5 19z M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.5-2-1-1 1a5 5 0 0 1-3-3l1-1-1-2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="i-instagram" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></symbol>
+  <symbol id="i-fleche-g" viewBox="0 0 24 24"><path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-fleche-d" viewBox="0 0 24 24"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-fermer" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></symbol>
+</svg>
