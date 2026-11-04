@@ -94,11 +94,26 @@ def test_rendu_travaux():
             (r / t["min"]).parent.mkdir(parents=True, exist_ok=True)
             Image.new("RGB", (500, 400)).save(r / t["min"], "WEBP")
         h = g.rendu_travaux(_travaux_exemple(), "en", "../", r)
-    assert '<li class="vignette grand" data-cat="logos">' in h
+    assert '<li class="vignette" data-cat="logos">' in h and "grand" not in h
     assert 'src="../img/min/logos/1-a.webp" width="500" height="400"' in h
     assert 'alt="Logos, A &amp; B"' in h
-    assert 'alt="Books and magazines"' in h
+    assert '<span class="vignette-legende">Logos, A &amp; B</span>' in h
     assert 'data-pdf="../pdf/books_magazines/3-c.pdf"' in h
+
+
+def test_rendu_selection():
+    sel = [{"fichier": "img/portfolio/web/1-a.jpg", "fr": "Web, A & B", "en": "Web, A and B"}] * 2
+    h = g.rendu_selection(sel, "fr", "../")
+    assert h.count('<a class="projet"') == 2
+    assert 'href="../img/portfolio/web/1-a.jpg" data-fichier="img/portfolio/web/1-a.jpg"' in h
+    assert '<span>01</span><span>Web, A &amp; B</span>' in h and '<span>02</span>' in h
+    assert 'alt="Web, A &amp; B"' in h
+
+
+def test_rendu_bandeau():
+    h = g.rendu_bandeau([{"logo": "x", "nom": "L'île"}, {"logo": "y", "nom": "DeFacto"}])
+    assert h.count("<span>L&#x27;île</span>") == 2 and h.count("<span>DeFacto</span>") == 2
+    assert '<span aria-hidden="true">' in h
 
 
 def test_rendu_clients():

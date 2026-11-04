@@ -110,12 +110,25 @@ def rendu_travaux(travaux, langue, prefixe, racine=Path(".")):
         larg, haut = Image.open(racine / t["min"]).size
         alt = libelle(t["categorie"], langue) + (f', {t["client"]}' if t["client"] else "")
         pdf = f' data-pdf="{e(prefixe + t["pdf"])}"' if t["pdf"] else ""
-        classe = "vignette grand" if t["grand"] else "vignette"
         lignes.append(
-            f'<li class="{classe}" data-cat="{t["categorie"]}"><a href="{e(prefixe + t["fichier"])}"{pdf}>'
+            f'<li class="vignette" data-cat="{t["categorie"]}"><a href="{e(prefixe + t["fichier"])}"{pdf}>'
             f'<img src="{e(prefixe + t["min"])}" width="{larg}" height="{haut}" alt="{e(alt)}" loading="lazy" decoding="async">'
-            f'</a></li>')
+            f'<span class="vignette-legende">{e(alt)}</span></a></li>')
     return "\n" + "\n".join(lignes) + "\n"
+
+
+def rendu_selection(selection, langue, prefixe):
+    e = lambda s: html.escape(s, quote=True)
+    return "\n" + "\n".join(
+        f'<a class="projet" href="{e(prefixe + s["fichier"])}" data-fichier="{e(s["fichier"])}">'
+        f'<div class="cadre"><img src="{e(prefixe + s["fichier"])}" alt="{e(s[langue])}" loading="lazy" decoding="async"></div>'
+        f'<div class="legende"><span>{i:02d}</span><span>{e(s[langue])}</span></div></a>'
+        for i, s in enumerate(selection, 1)) + "\n"
+
+
+def rendu_bandeau(clients):
+    noms = "".join(f"<span>{html.escape(c['nom'], quote=True)}</span>" for c in clients)
+    return f'{noms}<span aria-hidden="true">{noms}</span>'
 
 
 def rendu_clients(clients, prefixe):
@@ -138,6 +151,7 @@ def main(racine=Path(".")):
     (racine / "data/travaux.json").write_text(
         json.dumps(travaux, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     clients = json.loads((racine / "data/clients.json").read_text(encoding="utf-8"))
+    selection = json.loads((racine / "data/selection.json").read_text(encoding="utf-8"))
     for page, langue, prefixe in PAGES:
         f = racine / page
         if not f.exists():
@@ -147,6 +161,8 @@ def main(racine=Path(".")):
         h = injecter(h, "filtres", rendu_filtres(travaux, langue))
         h = injecter(h, "travaux", rendu_travaux(travaux, langue, prefixe, racine))
         h = injecter(h, "clients", rendu_clients(clients, prefixe))
+        h = injecter(h, "selection", rendu_selection(selection, langue, prefixe))
+        h = injecter(h, "bandeau", rendu_bandeau(clients))
         f.write_text(h, encoding="utf-8")
     print(len(travaux), "travaux,", len(clients), "clients")
     return travaux
