@@ -10,7 +10,7 @@ Historique des directions :
 
 ## 1. Objectif et contexte
 
-Remplacer l'ancien site (template Bootstrap/jQuery de 2021, encore en ligne sur `main`) par un portfolio professionnel pour Meriem Ben Rejeb, graphiste depuis 2005.
+Remplacer l'ancien site (template Bootstrap/jQuery de 2021, encore en ligne sur `main`) par un portfolio professionnel pour Meriem Ben Rajeb, graphiste depuis 2005.
 
 Contraintes :
 
@@ -26,7 +26,7 @@ Contraintes :
 | Référence visuelle | `docs/maquette/index.html` (maquette validée, avec `docs/maquette/avatar.webp`) |
 | Avatar | Illustration de Meriem générée par Nano Banana à partir de sa photo, version sans pupilles ; iris SVG qui suivent la souris |
 | Travaux | Sélection de 6 projets en grille décalée, puis grille complète filtrable avec visionneuse |
-| Nom affiché | **Meriem Ben Rejeb** |
+| Nom affiché | **Meriem Ben Rajeb** |
 | Contenu gardé | FR + EN, logos clients, téléphone, WhatsApp, Instagram, e-mail |
 | Technique | HTML, CSS, JS sans framework ; générateur Python existant (`outils/generer.py`) |
 
@@ -34,7 +34,7 @@ Contraintes :
 
 Une page par langue : `index.html` (FR), `en/index.html` (EN).
 
-1. **En-tête fixe** : fond `rgb(14 14 16 / .72)` flouté (`backdrop-filter: blur(14px)`), filet bas. Gauche : « Meriem *Ben Rejeb* » (demandé par l'utilisateur, remplace « MBR studio » de la maquette). Droite : Travaux, Expertise, Parcours, Contact, EN/FR. Mobile : bouton « Menu » ouvrant un panneau plein écran.
+1. **En-tête fixe** : fond `rgb(14 14 16 / .72)` flouté (`backdrop-filter: blur(14px)`), filet bas. Gauche : « Meriem *Ben Rajeb* » (demandé par l'utilisateur, remplace « MBR studio » de la maquette). Droite : Travaux, Expertise, Parcours, Contact, EN/FR. Mobile : bouton « Menu » ouvrant un panneau plein écran.
 2. **Accueil** (hauteur d'écran) : pastille accent + « Disponible pour de nouveaux projets » ; nom en très gros « Meriem / Ben Rejeb, / *graphiste* » (le dernier mot en serif italique accent) ; à droite l'avatar portrait 4:5, 460 px de large max (colonne de 460 px dès 960 px), coins 10 px, yeux qui suivent la souris ; en bas, 3 colonnes : « Identité visuelle, packaging, édition / PLV, web et interfaces de jeu », « Depuis 2005 / Agences, groupes et freelance », « Sèvres, Paris / Projets en France et à l'étranger ».
 3. **Bandeau clients** : noms des clients en serif italique gris qui défilent, séparés par un astérisque accent.
 4. **Travaux choisis** : titre « Travaux *choisis* » + « 179 réalisations, 9 disciplines » ; 6 projets en grille décalée (12 colonnes, spans 7/5, 5/7, 6/6 avec décalages verticaux), numéro « 01 » et légende sous chaque image ; lien « Voir les 179 réalisations ».
@@ -118,7 +118,7 @@ Inchangés par rapport au code existant (`js/galerie.js`, `js/site.js`) : pilule
 
 - Mobile d'abord, paliers 768, 1024, 1440 px, aucun défilement horizontal.
 - Cibles tactiles 44 × 44 px minimum ; focus visible accent ; lien d'évitement ; `lang` ; contrastes section 4.
-- `<title>` « Meriem Ben Rejeb, graphiste » / « graphic designer », meta description, Open Graph avec `img/og.png` 1200 × 630 (capture du haut de l'accueil), `hreflang`, `sitemap.xml`, `robots.txt` (exclut `/docs/`, `/outils/`, `/data/`), JSON-LD `Person`.
+- `<title>` « Meriem Ben Rajeb, graphiste » / « graphic designer », meta description, Open Graph avec `img/og.png` 1200 × 630 (capture du haut de l'accueil), `hreflang`, `sitemap.xml`, `robots.txt` (exclut `/docs/`, `/outils/`, `/data/`), JSON-LD `Person`.
 
 ## 7. Fichiers
 
