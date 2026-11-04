@@ -27,14 +27,14 @@
 
 ---
 
-### Task A: Polices, avatar, nettoyage de la direction ludique
+### Task 1: Polices, avatar, nettoyage de la direction ludique
 
 **Files:**
 - Delete: `fonts/caveat.woff2`, `fonts/quicksand.woff2`, `img/dessins.svg`, `img/avatar-provisoire.svg`
-- Restore: `css/site.css` (modification non commitée d'une tâche abandonnée : `git -C … checkout -- css/site.css`) ; supprimer les fichiers non suivis `sitemap.xml`, `robots.txt`, `img/og.png` (refaits en tâche D)
+- Restore: `css/site.css` (modification non commitée d'une tâche abandonnée : `git -C … checkout -- css/site.css`) ; supprimer les fichiers non suivis `sitemap.xml`, `robots.txt`, `img/og.png` (refaits en tâche 4)
 - Create: `fonts/inter-tight.woff2`, `fonts/instrument-serif.woff2`, `fonts/instrument-serif-italic.woff2`, `fonts/OFL.txt` (réécrit), `img/avatar.webp`
 
-**Interfaces:** Produces : fichiers de polices et `img/avatar.webp` utilisés par la tâche C.
+**Interfaces:** Produces : fichiers de polices et `img/avatar.webp` utilisés par la tâche 3.
 
 - [ ] **Step 1: Remettre l'arbre propre**
 
@@ -77,11 +77,11 @@ git -C /home/aziz/workspace/meriembr.com add fonts/inter-tight.woff2 fonts/instr
 git -C /home/aziz/workspace/meriembr.com commit -m "feat: dark direction fonts and avatar; remove playful assets"
 ```
 
-(Les suppressions indexées partent dans ce commit.) Les pages référencent encore les fichiers supprimés jusqu'à la tâche C : c'est attendu.
+(Les suppressions indexées partent dans ce commit.) Les pages référencent encore les fichiers supprimés jusqu'à la tâche 3 : c'est attendu.
 
 ---
 
-### Task B: Générateur, sélection et noms clients
+### Task 2: Générateur, sélection et noms clients
 
 **Files:**
 - Create: `data/selection.json`
@@ -191,7 +191,7 @@ Dans `main`, charger `data/selection.json` à côté de `clients.json` et ajoute
 Run: `python3 -I /home/aziz/workspace/meriembr.com/outils/test_generer.py`
 Expected : 10 lignes `ok test_...`.
 
-Ne pas lancer le générateur sur les pages ici : leurs nouveaux marqueurs arrivent en tâche C.
+Ne pas lancer le générateur sur les pages ici : leurs nouveaux marqueurs arrivent en tâche 3.
 
 - [ ] **Step 6: Commit**
 
@@ -202,14 +202,14 @@ git -C /home/aziz/workspace/meriembr.com commit -m "feat: generator renders sele
 
 ---
 
-### Task C: Pages, CSS et JS de la direction sombre
+### Task 3: Pages, CSS et JS de la direction sombre
 
 **Files:**
 - Rewrite: `index.html`, `en/index.html`, `css/site.css`
 - Modify: `js/site.js`
 
 **Interfaces:**
-- Consumes : polices et `img/avatar.webp` (tâche A) ; marqueurs `selection`, `bandeau`, `filtres`, `travaux`, `clients` et leur HTML généré (tâche B) ; `lireHash`, `visibles`, `voisin` (`js/galerie.js`, inchangé).
+- Consumes : polices et `img/avatar.webp` (tâche 1) ; marqueurs `selection`, `bandeau`, `filtres`, `travaux`, `clients` et leur HTML généré (tâche 2) ; `lireHash`, `visibles`, `voisin` (`js/galerie.js`, inchangé).
 - Produces : site complet. Identifiants conservés : `#travaux`, `#filtres`, `#grille`, `#visionneuse`, `#menu-bouton`, `#menu`. Nouveaux : `#selection`, `.avatar`, `.curseur`.
 
 - [ ] **Step 1: Lire les références**
@@ -280,7 +280,7 @@ git -C /home/aziz/workspace/meriembr.com commit -m "feat: dark premium redesign 
 
 ---
 
-### Task D: Partage, référencement, vérification finale
+### Task 4: Partage, référencement, vérification finale
 
 **Files:**
 - Create: `img/og.png`, `sitemap.xml`, `robots.txt`
