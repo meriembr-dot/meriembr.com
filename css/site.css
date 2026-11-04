@@ -10,6 +10,7 @@
 html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
 body { margin: 0; background: var(--fond); color: var(--texte); font: 500 1.0625rem/1.6 var(--police-texte); overflow-x: hidden; }
 img, svg { display: block; max-width: 100%; }
+[hidden] { display: none !important; }
 a { color: var(--indigo); text-underline-offset: .2em; }
 :focus-visible { outline: 3px solid var(--indigo); outline-offset: 3px; border-radius: 6px; }
 .conteneur { width: min(1200px, 100% - 2rem); margin-inline: auto; }
@@ -70,7 +71,6 @@ a { color: var(--indigo); text-underline-offset: .2em; }
 @media (min-width: 768px) { .grille { grid-template-columns: repeat(3, 1fr); } }
 @media (min-width: 1200px) { .grille { grid-template-columns: repeat(5, 1fr); } }
 .vignette.grand { grid-column: span 2; grid-row: span 2; }
-.vignette[hidden] { display: none; }
 .vignette a { display: block; aspect-ratio: 1; overflow: hidden; background: var(--tuile); border: 2px solid var(--texte); border-radius: var(--rayon); transition: transform .25s ease, box-shadow .25s ease; }
 .vignette:nth-child(odd) a:hover, .vignette:nth-child(odd) a:focus-visible { transform: rotate(-2deg) scale(1.02); box-shadow: 6px 6px 0 var(--indigo); }
 .vignette:nth-child(even) a:hover, .vignette:nth-child(even) a:focus-visible { transform: rotate(2deg) scale(1.02); box-shadow: 6px 6px 0 var(--orange); }
@@ -124,3 +124,4 @@ a { color: var(--indigo); text-underline-offset: .2em; }
 .vis-fermer { position: absolute; top: 0; right: 0; }
 .vis-compteur { grid-column: 2; text-align: center; margin: .5rem; }
 .vis-pdf { grid-column: 2; justify-self: center; margin-bottom: 1rem; }
+.visionneuse :focus-visible { outline-color: var(--fond); }

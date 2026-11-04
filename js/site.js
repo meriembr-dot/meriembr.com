@@ -87,13 +87,12 @@ menu.addEventListener("click", (e) => {
 const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const trait = document.getElementById("chemin-trait");
 if (!calme && trait) {
-  const long = trait.getTotalLength();
-  trait.style.strokeDasharray = long;
-  trait.style.strokeDashoffset = long;
+  trait.style.strokeDasharray = 1;
+  trait.style.strokeDashoffset = 1;
   const dessiner = () => {
     const r = trait.closest(".chemin").getBoundingClientRect();
     const avance = Math.min(1, Math.max(0, (innerHeight * 0.8 - r.top) / r.height));
-    trait.style.strokeDashoffset = long * (1 - avance);
+    trait.style.strokeDashoffset = 1 - avance;
   };
   addEventListener("scroll", dessiner, { passive: true });
   dessiner();
