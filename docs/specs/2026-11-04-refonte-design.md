@@ -1,183 +1,163 @@
 # Refonte de meriembr.com : spec de design
 
-Date : 2026-11-04. Branche : `refonte`. État : design validé section par section, spec à relire.
+Date : 2026-11-04. Branche : `refonte`. État : direction validée sur maquette le 2026-11-04 (version 3).
+
+Historique des directions :
+
+1. Éditorial crème et taupe : jugée trop sage (avant code).
+2. Ludique illustré (vagues, étoiles, Caveat) : codée puis rejetée, « site de coloriage, de crèche, pas digne d'une graphiste pro ».
+3. **Sombre premium + éditorial suisse** : validée sur la maquette `docs/maquette/index.html`, avec avatar dont les yeux suivent la souris. C'est la référence visuelle de cette spec.
 
 ## 1. Objectif et contexte
 
-Remplacer le site actuel (template Bootstrap/jQuery de 2021, migré de PHP vers HTML statique sur `main`) par un nouveau portfolio pour Meriem Ben Rejeb, graphiste.
+Remplacer l'ancien site (template Bootstrap/jQuery de 2021, encore en ligne sur `main`) par un portfolio professionnel pour Meriem Ben Rejeb, graphiste depuis 2005.
 
 Contraintes :
 
-- Hébergement GitHub Pages, fichiers statiques uniquement, dépôt public `meriembr-dot/meriembr.com`, domaine `meriembr.com`.
-- Pages sert `main` ; la refonte vit sur `refonte` et ne sera publiée qu'après fusion.
-- Aucun outil de build, aucune dépendance JS ou CSS externe.
+- GitHub Pages, fichiers statiques, dépôt public `meriembr-dot/meriembr.com`, domaine `meriembr.com`. Pages sert `main` ; la refonte vit sur `refonte`.
+- Aucun outil de build, aucune dépendance JS ou CSS externe, aucun appel à Google Fonts.
 - Contenu repris de `main` : 179 travaux, 4 PDF, 34 logos clients, textes FR et EN.
 
 ## 2. Décisions validées
 
 | Sujet | Décision |
 |---|---|
-| Direction | **Ludique illustré** (riamehta.co.in), travaux en grille (Studio Feixen). Révisée le 2026-11-04 : la direction éditoriale crème/taupe a été jugée trop sage |
-| Présentation des travaux | Grille + filtres par catégorie + visionneuse, sans texte par projet |
-| Éléments dessinés | SVG simples dessinés par Claude (vagues, étoiles, spirales, nuage, chemin, icônes) ; Meriem fournit seulement son avatar |
-| Couleurs | Crème + orange, indigo, teal (section 4) |
-| Polices | Caveat (titres manuscrits) + Quicksand (texte) |
-| Nom affiché | **Meriem Ben Rejeb** partout (le logo actuel porte « Myriame » : à mettre à jour par elle) |
+| Direction | Sombre premium, touches d'éditorial suisse (grille décalée, filets fins, numérotation) |
+| Référence visuelle | `docs/maquette/index.html` (maquette validée, avec `docs/maquette/avatar.webp`) |
+| Avatar | Illustration de Meriem générée par Nano Banana à partir de sa photo, version sans pupilles ; iris SVG qui suivent la souris |
+| Travaux | Sélection de 6 projets en grille décalée, puis grille complète filtrable avec visionneuse |
+| Nom affiché | **Meriem Ben Rejeb** |
 | Contenu gardé | FR + EN, logos clients, téléphone, WhatsApp, Instagram, e-mail |
-| Technique | HTML, CSS, JS sans framework (option 1) |
-
-Références analysées le 2026-11-04 : abiemaxey.com/hello2, builtbyshristi.com, riamehta.co.in, studiofeixen.ch, gatzara.studio. buzzworthystudio.com non capturé (écran de chargement bloquant en navigateur automatisé).
+| Technique | HTML, CSS, JS sans framework ; générateur Python existant (`outils/generer.py`) |
 
 ## 3. Structure de page
 
-Une page par langue : `index.html` (FR), `en/index.html` (EN). Navigation par ancres.
+Une page par langue : `index.html` (FR), `en/index.html` (EN).
 
-1. **Menu flottant** : pilule crème fixe en haut, bordure épaisse indigo. Monogramme M, Travaux, Parcours, Contact, bascule FR/EN. Élément actif souligné par un gribouillis orange SVG. Mobile : monogramme + bouton « Menu » ouvrant un panneau plein écran.
-2. **Accueil** : « *hello!* » en Caveat orange, « Je suis Meriem Ben Rejeb, graphiste » en gros, avatar de Meriem détouré à droite entouré d'étoiles et d'une spirale. Vague orange en bas de section. Le haut de la grille des travaux est visible sous la ligne de flottaison.
-3. **Travaux** : titre « *Travaux* » avec spirale indigo ; filtres, grille, visionneuse (section 5).
-4. **Ce que je fais** : fond teal, 4 cartes avec icône SVG dessinée (Identité visuelle, Packaging, Édition, PLV et Web). Inspiration : « How do I do that? » de Ria.
-5. **À propos et parcours** : avatar, texte de présentation actuel raccourci, puis **chemin sinueux SVG** (trait indigo épais) portant les 7 étapes de la frise en bulles (remplace `img/timeline-fr.png` et `img/timeline-en.png`). Mobile : chemin vertical.
-6. **Ils m'ont fait confiance** : 34 logos clients dans des pastilles rondes, petites étoiles autour du titre.
-7. **Contact** : fond teal, vague orange au-dessus, grand nuage SVG crème contenant : e-mail en grand (`mailto:contact@meriembr.com`), téléphone (`tel:`), WhatsApp (`https://wa.me/33695368115`), Instagram (`@mbr.graphic.designer`), Sèvres.
+1. **En-tête fixe** : fond `rgb(14 14 16 / .72)` flouté (`backdrop-filter: blur(14px)`), filet bas. Gauche : « Meriem *Ben Rejeb* » (demandé par l'utilisateur, remplace « MBR studio » de la maquette). Droite : Travaux, Expertise, Parcours, Contact, EN/FR. Mobile : bouton « Menu » ouvrant un panneau plein écran.
+2. **Accueil** (hauteur d'écran) : pastille accent + « Disponible pour de nouveaux projets » ; nom en très gros « Meriem / Ben Rejeb, / *graphiste* » (le dernier mot en serif italique accent) ; à droite l'avatar portrait 4:5, coins 10 px, yeux qui suivent la souris ; en bas, 3 colonnes : « Identité visuelle, packaging, édition / PLV, web et interfaces de jeu », « Depuis 2005 / Agences, groupes et freelance », « Sèvres, Paris / Projets en France et à l'étranger ».
+3. **Bandeau clients** : noms des clients en serif italique gris qui défilent, séparés par un astérisque accent.
+4. **Travaux choisis** : titre « Travaux *choisis* » + « 179 réalisations, 9 disciplines » ; 6 projets en grille décalée (12 colonnes, spans 7/5, 5/7, 6/6 avec décalages verticaux), numéro « 01 » et légende sous chaque image ; lien « Voir les 179 réalisations ».
+5. **Toutes les réalisations** : filtres en pilules fines (filet, actif = fond accent), grille carrée 2/3/4 colonnes, visionneuse.
+6. **Expertise** : 3 chiffres (« 2005 / premier projet en agence », « 34 *clients* / marques, groupes, institutions », « 179 / réalisations publiées ») ; liste numérotée des 4 services (Identité visuelle, Packaging, Édition, PLV et web).
+7. **Parcours** : texte de présentation raccourci ; frise en liste fine à filets (période, poste, structure), 7 lignes (section 3.1).
+8. **Ils m'ont fait confiance** : 34 logos en tuiles claires (fond `#F2EFEA`), désaturés, couleur au survol.
+9. **Contact** : « Un projet, une marque, un lancement ? », e-mail en très grand (« contact@*meriembr*.com »), puis téléphone, WhatsApp, Instagram, Sèvres.
 
-Retirés : blocs « Content Writing / Web Development / Business Consultancy » (texte Lorem ipsum en commentaire), compteurs, carrousel.
-
-### Frise (contenu repris de `img/timeline-fr.png`)
+### 3.1 Frise
 
 | Période | Poste | Structure |
 |---|---|---|
-| 2005-2006 | Stagiaire graphic designer | Agence Zazacrea |
-| 2006-2007 | Stagiaire graphic designer | Agence Ballooons |
-| 2007-2008 | Graphic designer | Agence Scoop Organisation |
-| 2008-2014 | Graphic designer, webmaster | Groupe Materna, M&M Santé |
-| 2014-2018 | Graphic designer, webmaster | Groupe Huiles & Sens, Macosmetoperso |
-| 2018-2020 | Lead graphic designer | Agence Atheris Communication |
-| 2020-aujourd'hui | Graphic designer, webmaster | Freelance |
+| 2005-2006 | Stagiaire graphiste | Agence Zazacrea |
+| 2006-2007 | Stagiaire graphiste | Agence Ballooons |
+| 2007-2008 | Graphiste | Agence Scoop Organisation |
+| 2008-2014 | Graphiste, webmaster | Groupe Materna, M&M Santé |
+| 2014-2018 | Graphiste, webmaster | Groupe Huiles & Sens, Macosmetoperso |
+| 2018-2020 | Lead graphiste | Agence Atheris Communication |
+| 2020-aujourd'hui | Graphiste, webmaster | Freelance |
 
-## 4. Couleurs et typographie
+## 4. Couleurs, typographie, effets
 
-### Couleurs (contrastes calculés, WCAG AA = 4,5:1 pour le texte courant)
+### Couleurs (contrastes calculés le 2026-11-04)
 
-| Rôle | Valeur | Contraste sur `#FFF8EE` | Usage |
+| Variable | Valeur | Contraste sur `--fond` | Usage |
 |---|---|---|---|
-| `--fond` | `#FFF8EE` | | Fond général |
-| `--texte` | `#2A2440` | 13,98 | Titres, texte |
-| `--orange` | `#F26A1B` | 2,91 | Décor uniquement (vagues, « hello! », soulignements), jamais du texte courant |
-| `--indigo` | `#4B4FD8` | 5,84 | Liens, bordures, filtre actif, chemin du parcours |
-| `--teal` | `#1F6F7A` | crème dessus : 5,51 | Fond des sections Ce que je fais et Contact |
-| `--tuile` | `#F3EBDD` (à vérifier au rendu) | | Fond derrière chaque vignette |
+| `--fond` | `#0E0E10` | | Fond général |
+| `--surface` | `#17171A` | | Fond des images, cartes |
+| `--ligne` | `#2A2A2E` | | Filets |
+| `--texte` | `#F2EFEA` | 16,81 | Texte principal |
+| `--doux` | `#9A968F` | 6,55 | Texte secondaire |
+| `--accent` | `#E4FF5A` | 17,22 | Mot en italique, pastille, curseur, focus, filtre actif (texte `#0E0E10` dessus : 17,22) |
 
 ### Typographie
 
-- **Caveat** Bold pour les titres et accroches manuscrites.
-- **Quicksand** pour le texte courant, 17 px, interligne 1,6.
-- Combinaison « Handwritten Charm » proposée par UI UX Pro Max.
-- Polices auto-hébergées en woff2 dans `fonts/`, aucun appel à Google Fonts.
-- Titre d'accueil `clamp()` d'environ 48 px (mobile) à 120 px (grand écran).
+- **Inter Tight** (variable, 100 à 900) : titres et texte. Titres en 500-600, interlettrage négatif (-0,03 à -0,045 em).
+- **Instrument Serif** (normal et italique) : un mot accent par titre, en italique.
+- Versions fontsource 5.3.0 (`@fontsource-variable/inter-tight`, `@fontsource/instrument-serif`), woff2 auto-hébergés dans `fonts/`, licence OFL jointe.
+- Texte courant 17 px, interligne 1,55. Nom d'accueil `clamp(3.5rem, 11vw, 11rem)`, interligne 0,86.
 
-### Éléments SVG dessinés
+### Avatar et yeux
 
-Vague, étoile 5 branches, spirale, soulignement gribouillé, nuage, chemin sinueux, 4 icônes de métier. Trait volontairement irrégulier, effet « dessiné main ». SVG en ligne, couleurs par `currentColor` ou variables CSS.
+- Image de base : version sans pupilles, 1254 × 1254, convertie en WebP 900 px (`img/avatar.webp`).
+- SVG `viewBox="150 40 954 1192"` (cadrage 4:5) contenant l'image, puis pour chaque œil un groupe d'iris (cercle r 16 en dégradé `#9A9470` / `#77714F` / `#3E3A2A`, pupille r 7 `#141210`, reflet r 3 blanc) découpé par l'ellipse du blanc de l'œil : gauche `cx 546 cy 380 rx 40 ry 13`, droit `cx 749 cy 378 rx 41 ry 13`.
+- Une seule direction, calculée depuis le milieu des yeux (647, 379) vers le pointeur, appliquée aux deux iris (regard parallèle, jamais convergent). Déplacement max 16 unités en x, 5 en y, proportionnel à la distance (plein à 400 unités).
+- Coordonnées propres à cette image : à remesurer si l'avatar change.
+- `prefers-reduced-motion` ou écran tactile : iris fixes au centre.
+- Avatar décoratif (`aria-hidden`), le nom est porté par le titre.
 
-### Formes et effets
+### Curseur
 
-Cartes à coins arrondis (16 px), bordure fine, badge de catégorie façon autocollant, rotation ±2° au survol.
+Point accent de 10 px qui suit le pointeur ; sur un projet, il grandit à 84 px et affiche « Voir » (« View » en EN). Masqué sur écran tactile (`hover: none`) et le curseur système reste visible.
 
 ### Animations
 
-Vague qui ondule, étoiles en rotation lente, chemin du parcours qui se dessine au scroll (`stroke-dashoffset` + `IntersectionObserver`), fondu à l'apparition. Tout est désactivé sous `prefers-reduced-motion: reduce`. Pas de GSAP ni de three.js.
+Bandeau clients défilant (60 s), zoom léger des images au survol, apparition en fondu au scroll. Tout est coupé sous `prefers-reduced-motion: reduce`.
 
-## 5. Travaux : grille, filtres, visionneuse
+## 5. Travaux : sélection, grille, filtres, visionneuse
 
 ### Constat sur les images (mesuré le 2026-11-04)
 
-- 179 fichiers, 19,1 Mo ; 178 carrés, 1 paysage ; largeur médiane 500 px, maximum 1000 px.
-- 19 GIF animés ; 14 fichiers de plus de 300 Ko.
-- 4 PDF, 48 Mo au total.
+179 fichiers, 19,1 Mo ; 178 carrés ; largeur médiane 500 px, max 1000 px ; 19 GIF animés ; 4 PDF (48 Mo). Miniatures WebP déjà générées : `img/min/` (5,9 Mo).
 
-### Grille
+### Sélection
 
-- Carrés : 2 colonnes (mobile), 3 (tablette), 5 (grand écran).
-- 1 à 2 images par catégorie en double taille (2 × 2), choisies par le champ `"grand": true` de `data/travaux.json`.
-- Cartes arrondies, fond `--tuile` derrière chaque vignette.
-- Survol : légende (catégorie, client si connu), rotation ±2°.
-- Ordre : catégories dans l'ordre de l'ancien site (`logos`, `visual_identity`, `flyers_leaflets`, `books_magazines`, `packaging_labels`, `various`, `web`, `pos_panels_dressing`, `gaming`), puis numéro en tête de nom de fichier.
+6 projets choisis dans `data/selection.json` (liste de chemins `fichier` de `data/travaux.json`, avec légende FR et EN). Valeurs initiales (celles de la maquette) : `books_magazines/5-jac2015.jpg` (Édition, JAC 2015), `visual_identity/1-Zahrat-Zanbaq.jpg` (Identité, Zahrat Zanbaq), `packaging_labels/1-Hangtags.gif` (Packaging, étiquettes), `pos_panels_dressing/1-defacto.jpg` (PLV, DeFacto), `flyers_leaflets/1-weekend-aroma.jpg` (Flyers, Weekend Aroma), `web/1-duo-visuel.jpg` (Web, Duo visuel). Images recadrées en 4:3 (`object-fit: cover`), source = original (pas la miniature carrée). Clic = visionneuse.
 
-### Filtres
+### Grille complète
 
-- Pilules « Tout (179) » + 9 catégories avec leur nombre, `<button aria-pressed>`.
-- Filtre actif dans l'URL (`#travaux/packaging`) : lien partageable, bouton Retour fonctionnel.
-- Sans JS : toutes les vignettes visibles, liens directs vers les images.
+- Carrés, 2 colonnes (mobile), 3 (tablette), 4 (grand écran), écart 12 px, coins 6 px, fond `--surface`.
+- Le champ `grand` de `travaux.json` n'est plus utilisé (toutes les vignettes à taille égale).
+- Ordre : catégories dans l'ordre global, puis numéro en tête de nom.
+- Survol : zoom 1,045, légende (catégorie, client) en surimpression bas.
 
-### Visionneuse
+### Filtres, visionneuse
 
-- `<dialog>` natif, fond sombre, image centrée, précédent/suivant limités à la catégorie filtrée, compteur « 3 / 28 ».
-- Fermeture : Échap, bouton ✕, clic sur le fond. Clavier : flèches. Mobile : glissement.
-- Focus piégé dans la visionneuse, rendu à la vignette d'origine à la fermeture.
-- Magazines avec PDF : bouton « Feuilleter le PDF » (nouvel onglet) dans la visionneuse.
-
-### Images
-
-- Miniatures WebP 600 px dans `img/min/`, `loading="lazy"`, `width` et `height` déclarés.
-- Visionneuse : fichier original.
-- GIF animés convertis en WebP animé pour les miniatures.
-- `alt` = « catégorie, client », client déduit du nom de fichier quand il existe (`28-klinika` → Klinika), modifiable dans `travaux.json`.
-- Limite connue : originaux à 500 px, flous en grand écran. Remplaçables par des fichiers HD sans changer le code.
-
-### Format de `data/travaux.json`
-
-```json
-[
-  {"fichier": "img/portfolio/logos/9-galya.jpg", "min": "img/min/logos/9-galya.webp",
-   "categorie": "logos", "client": "Galya", "grand": false, "pdf": null}
-]
-```
-
-Généré par `outils/miniatures.py`, puis modifiable à la main. Le script ne réécrit pas les champs `client` et `grand` déjà présents.
+Inchangés par rapport au code existant (`js/galerie.js`, `js/site.js`) : pilules `aria-pressed`, filtre dans l'URL `#travaux/<cat>`, `<dialog>` avec précédent/suivant limités au filtre, compteur, Échap, glissement, retour du focus, bouton PDF pour les 4 magazines. Seul l'habillage change (fond `--fond` à 96 %, boutons à filet `--ligne`, focus accent).
 
 ## 6. Mobile, accessibilité, référencement
 
 - Mobile d'abord, paliers 768, 1024, 1440 px, aucun défilement horizontal.
-- Cibles tactiles 44 × 44 px minimum.
-- Focus clavier visible partout, lien d'évitement « Aller aux travaux », `lang="fr"` / `lang="en"`.
-- `<title>` « Meriem Ben Rejeb, graphic designer », meta description, Open Graph avec image 1200 × 630, `hreflang` FR/EN, `sitemap.xml`, `robots.txt`, données structurées `Person` (schema.org) avec le lien Instagram.
+- Cibles tactiles 44 × 44 px minimum ; focus visible accent ; lien d'évitement ; `lang` ; contrastes section 4.
+- `<title>` « Meriem Ben Rejeb, graphiste » / « graphic designer », meta description, Open Graph avec `img/og.png` 1200 × 630 (capture du haut de l'accueil), `hreflang`, `sitemap.xml`, `robots.txt` (exclut `/docs/`, `/outils/`, `/data/`), JSON-LD `Person`.
 
 ## 7. Fichiers
 
 ```
-index.html
-en/index.html
-css/site.css
-js/site.js
-data/travaux.json
-img/portfolio/...      originaux repris de main
-img/min/...            miniatures WebP générées
-img/testimonial/...    logos clients repris de main
-pdf/...                repris de main
-fonts/                 Caveat, Quicksand (woff2)
-outils/miniatures.py   génère img/min/ et data/travaux.json
-CNAME, .nojekyll
+index.html, en/index.html
+css/site.css                 réécrit pour la direction 3
+js/galerie.js (+ test)       inchangé
+js/site.js                   + yeux, curseur ; filtres et visionneuse conservés
+js/package.json              inchangé
+data/travaux.json            inchangé
+data/selection.json          nouveau
+data/clients.json            inchangé
+img/avatar.webp              nouveau
+img/min/                     inchangé
+fonts/                       Inter Tight, Instrument Serif (remplacent Caveat, Quicksand)
+outils/generer.py            + rendu de la sélection et du bandeau clients
+outils/verifier.py, outils/captures.py   conservés
+docs/maquette/               maquette validée (référence)
 ```
 
-Supprimés : `css/` et `js/` de l'ancien template (Bootstrap, jQuery, 15 plugins), `fonts/` FontAwesome et Linearicons, `img/timeline*.png`, images de fond inutilisées. Les icônes (Instagram, WhatsApp, flèches) sont des SVG en ligne.
+Supprimés : `img/dessins.svg`, `img/avatar-provisoire.svg`, `fonts/caveat.woff2`, `fonts/quicksand.woff2`.
 
 ## 8. Vérification avant livraison
 
-- Captures automatiques (Playwright) en 375, 768, 1440 px, FR et EN.
-- Contrôle des liens locaux : 0 lien cassé.
-- Visionneuse testée au clavier (ouverture, flèches, Échap, retour du focus).
-- Lighthouse performance et accessibilité sur la version locale, chiffres rapportés tels quels.
-- Relecture locale par `python3 -m http.server` avant toute fusion dans `main`.
+- Tests Python et JS existants verts.
+- Captures en 375, 768, 1440 px, FR et EN, en viewport pendant le défilement (les captures pleine page masquent le contenu révélé au scroll).
+- Yeux : captures zoomées souris à gauche, près du visage, à droite, en bas ; regard parallèle, iris jamais hors du blanc.
+- Visionneuse au clavier ; 0 lien cassé ; Lighthouse performance et accessibilité mesurés et rapportés tels quels.
+- Relecture locale avant toute fusion dans `main`.
 
 ## 9. À fournir ou valider par Meriem
 
-1. Avatar détouré (PNG transparent ou SVG) pour l'accueil et « À propos » (emplacement provisoire marqué en attendant).
-2. Frise : situation après 2020 (« Freelance, aujourd'hui » est-il toujours vrai ?).
+1. Accord pour publier l'avatar généré à partir de sa photo.
+2. Frise : situation après 2020.
 3. Numéro au format international pour WhatsApp (`+33 6 95 36 81 15` supposé).
-4. Noms des clients par travail (`travaux.json`).
+4. Noms des clients par travail (`travaux.json`, 8 vides) et choix des 6 projets de la sélection.
 5. Fichiers HD des travaux, si disponibles.
-6. Logo mis à jour au nom de Meriem.
+6. « Disponible pour de nouveaux projets » : à confirmer.
 
 ## 10. Hors périmètre
 
-Pages projet détaillées, blog, formulaire de contact, statistiques de visite, mode sombre.
+Pages projet détaillées, blog, formulaire de contact, statistiques de visite, mode clair.

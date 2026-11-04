@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maquette : Meriem Ben Rejeb</title>
+<style>
+@font-face { font-family: "Inter Tight"; src: url("fonts/inter-tight.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Instrument Serif"; src: url("fonts/instrument-serif.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "Instrument Serif"; src: url("fonts/instrument-serif-italic.woff2") format("woff2"); font-style: italic; font-display: swap; }
+:root {
+  --fond: #0E0E10; --surface: #17171A; --ligne: #2A2A2E;
+  --texte: #F2EFEA; --doux: #9A968F; --accent: #E4FF5A;
+  --sans: "Inter Tight", system-ui, sans-serif; --serif: "Instrument Serif", Georgia, serif;
+  --img: "../../";
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--fond); color: var(--texte); font: 400 1.0625rem/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+img { display: block; max-width: 100%; }
+.c { width: min(1360px, 100% - 3rem); margin-inline: auto; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+/* En-tete */
+.top { position: fixed; inset: 0 0 auto; z-index: 20; background: rgb(14 14 16 / .72); backdrop-filter: blur(14px); border-bottom: 1px solid var(--ligne); }
+.top .c { display: flex; align-items: center; justify-content: space-between; height: 76px; }
+.logo { font: 600 1.05rem var(--sans); letter-spacing: .02em; text-decoration: none; }
+.logo em { font: italic 400 1.35rem var(--serif); }
+.nav { display: flex; gap: 2rem; font-size: .95rem; }
+.nav a { text-decoration: none; opacity: .8; }
+.nav a:hover { opacity: 1; }
+.dispo { display: inline-flex; align-items: center; gap: .5rem; font-size: .85rem; color: var(--doux); }
+.dispo::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+
+/* Accueil */
+.hero { min-height: 100svh; display: grid; align-content: end; padding: 120px 0 48px; border-bottom: 1px solid var(--ligne); }
+.hero-grille { display: grid; gap: 2rem; align-items: end; }
+@media (min-width: 960px) { .hero-grille { grid-template-columns: 1fr 360px; } }
+.surtitre { font-size: .9rem; color: var(--doux); letter-spacing: .08em; text-transform: uppercase; margin: 0 0 1.5rem; }
+.nom { font: 600 clamp(3.5rem, 11vw, 11rem)/.86 var(--sans); letter-spacing: -.045em; margin: 0; }
+.nom em { font: italic 400 1.04em/1 var(--serif); letter-spacing: -.02em; color: var(--accent); }
+.hero-bas { display: flex; flex-wrap: wrap; gap: 1.5rem 4rem; margin-top: 2.5rem; color: var(--doux); }
+.hero-bas strong { display: block; color: var(--texte); font-weight: 500; font-size: 1.05rem; }
+
+/* Avatar qui suit la souris */
+.avatar { position: relative; width: 100%; max-width: 380px; aspect-ratio: 4 / 5; border-radius: 10px; background: #0b0b0b; border: 1px solid var(--ligne); overflow: hidden; justify-self: end; }
+.avatar svg { width: 100%; height: 100%; }
+.pupille { transition: transform .08s linear; }
+.avatar-note { position: absolute; bottom: 14px; left: 0; right: 0; text-align: center; font-size: .72rem; color: var(--doux); letter-spacing: .06em; text-transform: uppercase; }
+
+/* Bandeau clients */
+.bandeau { border-bottom: 1px solid var(--ligne); overflow: hidden; padding: 1.4rem 0; }
+.piste { display: flex; gap: 3rem; width: max-content; animation: defile 60s linear infinite; font: italic 400 1.9rem var(--serif); color: var(--doux); white-space: nowrap; }
+.piste span::after { content: "*"; margin-left: 3rem; color: var(--accent); font: 400 1.2rem var(--sans); vertical-align: middle; }
+@keyframes defile { to { transform: translateX(-50%); } }
+
+/* Selection */
+.section { padding: 7rem 0; }
+.entete-section { display: flex; justify-content: space-between; align-items: end; gap: 2rem; margin-bottom: 3rem; border-bottom: 1px solid var(--ligne); padding-bottom: 1.5rem; }
+.entete-section h2 { font: 500 clamp(2.2rem, 5vw, 4.5rem)/1 var(--sans); letter-spacing: -.035em; margin: 0; }
+.entete-section h2 em { font: italic 400 1.05em var(--serif); }
+.compte { color: var(--doux); font-size: .95rem; }
+.grille { display: grid; gap: 1.25rem; grid-template-columns: repeat(12, 1fr); }
+.projet { grid-column: span 12; text-decoration: none; }
+@media (min-width: 800px) {
+  .projet:nth-child(1) { grid-column: span 7; } .projet:nth-child(2) { grid-column: span 5; margin-top: 8rem; }
+  .projet:nth-child(3) { grid-column: span 5; } .projet:nth-child(4) { grid-column: span 7; margin-top: -6rem; }
+  .projet:nth-child(5) { grid-column: span 6; } .projet:nth-child(6) { grid-column: span 6; margin-top: 5rem; }
+}
+.cadre { overflow: hidden; border-radius: 6px; background: var(--surface); }
+.cadre img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: transform .8s cubic-bezier(.2,.7,.2,1), filter .6s; filter: saturate(.85); }
+.projet:hover img { transform: scale(1.045); filter: saturate(1); }
+.legende { display: flex; justify-content: space-between; gap: 1rem; padding-top: .9rem; font-size: .95rem; }
+.legende span:first-child { color: var(--doux); font-variant-numeric: tabular-nums; }
+.tout-voir { display: inline-flex; margin-top: 3rem; gap: .6rem; align-items: center; font-size: 1.05rem; text-decoration: none; border-bottom: 1px solid var(--texte); padding-bottom: .2rem; }
+
+/* Expertise */
+.chiffres { display: grid; gap: 1px; background: var(--ligne); border-block: 1px solid var(--ligne); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.chiffres div { background: var(--fond); padding: 2.5rem 1.5rem; }
+.chiffres b { display: block; font: 500 clamp(3rem, 6vw, 5.5rem)/1 var(--sans); letter-spacing: -.04em; }
+.chiffres b em { font: italic 400 1em var(--serif); color: var(--accent); }
+.chiffres span { color: var(--doux); }
+.services { list-style: none; margin: 0; padding: 0; }
+.services li { display: grid; grid-template-columns: 4rem 1fr; gap: 1rem; padding: 1.8rem 0; border-bottom: 1px solid var(--ligne); align-items: baseline; }
+@media (min-width: 800px) { .services li { grid-template-columns: 6rem 1fr 1fr; } }
+.services .n { color: var(--doux); font-variant-numeric: tabular-nums; }
+.services h3 { font: 500 clamp(1.6rem, 3vw, 2.6rem)/1.05 var(--sans); letter-spacing: -.03em; margin: 0; }
+.services p { margin: 0; color: var(--doux); }
+
+/* Contact */
+.contact { padding: 9rem 0 4rem; }
+.contact p { color: var(--doux); margin: 0 0 1.5rem; }
+.mail { font: 500 clamp(2.2rem, 7.5vw, 7.5rem)/1 var(--sans); letter-spacing: -.045em; text-decoration: none; display: inline-block; }
+.mail em { font: italic 400 1em var(--serif); color: var(--accent); }
+.liens { display: flex; flex-wrap: wrap; gap: 1rem 2.5rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--ligne); color: var(--doux); }
+.liens a { text-decoration: none; }
+.liens a:hover { color: var(--texte); }
+
+/* Curseur */
+.curseur { position: fixed; top: 0; left: 0; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--accent); pointer-events: none; z-index: 50; transition: width .25s, height .25s, margin .25s; display: grid; place-items: center; font: 600 .75rem var(--sans); color: var(--fond); }
+.curseur.grand { width: 84px; height: 84px; margin: -42px 0 0 -42px; }
+@media (hover: none) { .curseur { display: none; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="top"><div class="c">
+  <a class="logo" href="#">Meriem <em>Ben Rejeb</em></a>
+  <nav class="nav"><a href="#travaux">Travaux</a><a href="#expertise">Expertise</a><a href="#contact">Contact</a><a href="#">EN</a></nav>
+</div></header>
+
+<main>
+<section class="hero"><div class="c">
+  <div class="hero-grille">
+    <div>
+      <p class="surtitre"><span class="dispo">Disponible pour de nouveaux projets</span></p>
+      <h1 class="nom">Meriem<br>Ben Rejeb, <em>graphiste</em></h1>
+    </div>
+    <div class="avatar" aria-hidden="true">
+      <svg viewBox="150 40 954 1192" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <radialGradient id="iris"><stop offset="0" stop-color="#9A9470"/><stop offset=".55" stop-color="#77714F"/><stop offset="1" stop-color="#3E3A2A"/></radialGradient>
+          <clipPath id="oeil-g"><ellipse cx="546" cy="380" rx="40" ry="13"/></clipPath>
+          <clipPath id="oeil-d"><ellipse cx="749" cy="378" rx="41" ry="13"/></clipPath>
+        </defs>
+        <image href="avatar.webp" width="1254" height="1254"/>
+        <g clip-path="url(#oeil-g)"><g class="pupille" data-cx="546" data-cy="380"><circle cx="546" cy="380" r="16" fill="url(#iris)"/><circle cx="546" cy="380" r="7" fill="#141210"/><circle cx="551" cy="375" r="3" fill="#fff" opacity=".9"/></g></g>
+        <g clip-path="url(#oeil-d)"><g class="pupille" data-cx="749" data-cy="378"><circle cx="749" cy="378" r="16" fill="url(#iris)"/><circle cx="749" cy="378" r="7" fill="#141210"/><circle cx="754" cy="373" r="3" fill="#fff" opacity=".9"/></g></g>
+      </svg>
+    </div>
+  </div>
+  <div class="hero-bas">
+    <div><strong>Identité visuelle, packaging, édition</strong>PLV, web et interfaces de jeu</div>
+    <div><strong>Depuis 2005</strong>Agences, groupes et freelance</div>
+    <div><strong>Sèvres, Paris</strong>Projets en France et à l'étranger</div>
+  </div>
+</div></section>
+
+<div class="bandeau" aria-label="Clients"><div class="piste">
+  <span>DeFacto</span><span>Ambassade d'Allemagne</span><span>Giordano</span><span>Jadmire Pharma</span><span>Glossip Milano</span><span>Mediterra</span><span>Prosmetics</span><span>Scoop Organisation</span>
+  <span>DeFacto</span><span>Ambassade d'Allemagne</span><span>Giordano</span><span>Jadmire Pharma</span><span>Glossip Milano</span><span>Mediterra</span><span>Prosmetics</span><span>Scoop Organisation</span>
+</div></div>
+
+<section id="travaux" class="section"><div class="c">
+  <div class="entete-section"><h2>Travaux <em>choisis</em></h2><span class="compte">179 réalisations, 9 disciplines</span></div>
+  <div class="grille">
+    <a class="projet" href="../../img/portfolio/books_magazines/5-jac2015.jpg" target="_blank"><div class="cadre"><img src="../../img/portfolio/books_magazines/5-jac2015.jpg" alt=""></div><div class="legende"><span>01</span><span>Édition, JAC 2015</span></div></a>
+    <a class="projet" href="../../img/portfolio/visual_identity/1-Zahrat-Zanbaq.jpg" target="_blank"><div class="cadre"><img src="../../img/portfolio/visual_identity/1-Zahrat-Zanbaq.jpg" alt=""></div><div class="legende"><span>02</span><span>Identité, Zahrat Zanbaq</span></div></a>
+    <a class="projet" href="../../img/portfolio/packaging_labels/1-Hangtags.gif" target="_blank"><div class="cadre"><img src="../../img/portfolio/packaging_labels/1-Hangtags.gif" alt=""></div><div class="legende"><span>03</span><span>Packaging, étiquettes</span></div></a>
+    <a class="projet" href="../../img/portfolio/pos_panels_dressing/1-defacto.jpg" target="_blank"><div class="cadre"><img src="../../img/portfolio/pos_panels_dressing/1-defacto.jpg" alt=""></div><div class="legende"><span>04</span><span>PLV, DeFacto</span></div></a>
+    <a class="projet" href="../../img/portfolio/flyers_leaflets/1-weekend-aroma.jpg" target="_blank"><div class="cadre"><img src="../../img/portfolio/flyers_leaflets/1-weekend-aroma.jpg" alt=""></div><div class="legende"><span>05</span><span>Flyers, Weekend Aroma</span></div></a>
+    <a class="projet" href="../../img/portfolio/web/1-duo-visuel.jpg" target="_blank"><div class="cadre"><img src="../../img/portfolio/web/1-duo-visuel.jpg" alt=""></div><div class="legende"><span>06</span><span>Web, Duo visuel</span></div></a>
+  </div>
+  <a class="tout-voir" href="#">Voir les 179 réalisations <span aria-hidden="true">&#8599;</span></a>
+</div></section>
+
+<section id="expertise" class="section" style="padding-top:0"><div class="c">
+  <div class="chiffres">
+    <div><b>2005</b><span>premier projet en agence</span></div>
+    <div><b>34 <em>clients</em></b><span>marques, groupes, institutions</span></div>
+    <div><b>179</b><span>réalisations publiées</span></div>
+  </div>
+  <ul class="services">
+    <li><span class="n">01</span><h3>Identité visuelle</h3><p>Logos, chartes graphiques, papeterie.</p></li>
+    <li><span class="n">02</span><h3>Packaging</h3><p>Emballages et étiquettes, du concept au fichier d'impression.</p></li>
+    <li><span class="n">03</span><h3>Édition</h3><p>Livres, magazines, catalogues, brochures.</p></li>
+    <li><span class="n">04</span><h3>PLV et web</h3><p>Affiches, habillage de lieux, visuels web, interfaces de jeu.</p></li>
+  </ul>
+</div></section>
+
+<section id="contact" class="contact"><div class="c">
+  <p>Un projet, une marque, un lancement ?</p>
+  <a class="mail" href="mailto:contact@meriembr.com">contact@<em>meriembr</em>.com</a>
+  <div class="liens"><a href="tel:+33695368115">06 95 36 81 15</a><a href="https://wa.me/33695368115">WhatsApp</a><a href="https://www.instagram.com/mbr.graphic.designer">Instagram</a><span>Sèvres, France</span></div>
+</div></section>
+</main>
+
+<div class="curseur" aria-hidden="true"></div>
+<script>
+const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const pupilles = [...document.querySelectorAll(".pupille")];
+const svg = document.querySelector(".avatar svg");
+const curseur = document.querySelector(".curseur");
+addEventListener("pointermove", (e) => {
+  curseur.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+  if (calme) return;
+  const m = svg.getScreenCTM().inverse();
+  const p = new DOMPoint(e.clientX, e.clientY).matrixTransform(m);
+  // Une seule direction pour les deux yeux, calculée depuis le milieu des yeux : regard parallèle, jamais convergent.
+  const a = Math.atan2(p.y - 379, p.x - 647);
+  const d = Math.min(1, Math.hypot(p.x - 647, p.y - 379) / 400);
+  const t = `translate(${Math.cos(a) * d * 16} ${Math.sin(a) * d * 5})`;
+  for (const o of pupilles) o.setAttribute("transform", t);
+});
+document.querySelectorAll(".projet").forEach((el) => {
+  el.addEventListener("pointerenter", () => { curseur.classList.add("grand"); curseur.textContent = "Voir"; });
+  el.addEventListener("pointerleave", () => { curseur.classList.remove("grand"); curseur.textContent = ""; });
+});
+</script>
+</body>
+</html>
