@@ -6,12 +6,34 @@ const items = vignettes.map((v) => ({ cat: v.dataset.cat }));
 const boutons = [...document.querySelectorAll("#filtres [data-cat]")];
 let courant = "tout";
 
+/* Voir plus : la grille montre PAS vignettes de plus à chaque clic, remis à zéro à chaque filtre */
+const PAS = 16;
+let montres = PAS;
+const plus = document.getElementById("plus");
+const plusReste = plus.querySelector(".plus-reste");
+
+function afficherGrille() {
+  const liste = visibles(items, courant);
+  const ok = new Set(liste.slice(0, montres));
+  vignettes.forEach((v, i) => { v.hidden = !ok.has(i); });
+  const reste = liste.length - montres;
+  plus.hidden = reste <= 0;
+  plusReste.textContent = `(${reste})`;
+}
+
 function filtrer(cat) {
   courant = boutons.some((b) => b.dataset.cat === cat) ? cat : "tout";
-  const ok = new Set(visibles(items, courant));
-  vignettes.forEach((v, i) => { v.hidden = !ok.has(i); });
+  montres = PAS;
+  afficherGrille();
   boutons.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.cat === courant)));
 }
+
+plus.addEventListener("click", () => {
+  const premier = visibles(items, courant)[montres];
+  montres += PAS;
+  afficherGrille();
+  vignettes[premier]?.querySelector("a").focus({ preventScroll: true });
+});
 
 boutons.forEach((b) => b.addEventListener("click", () => {
   const cat = b.dataset.cat;
@@ -104,8 +126,54 @@ const obs = new IntersectionObserver((entrees) => entrees.forEach((e) => {
 }), { threshold: 0.15 });
 document.querySelectorAll(".visible-au-scroll").forEach((el) => obs.observe(el));
 
-/* Yeux et curseur : souris seulement, coupés si mouvement réduit */
 const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* Frise : la ligne se remplit avec le défilement, chaque étape franchie s'allume */
+const zone = document.querySelector(".frise-zone");
+const etapes = [...zone.querySelectorAll(".frise li")];
+function suivreFrise() {
+  const repere = innerHeight * 0.6;
+  const r = zone.getBoundingClientRect();
+  zone.style.setProperty("--p", calme ? 1 : Math.min(1, Math.max(0, (repere - r.top) / r.height)));
+  for (const li of etapes) li.classList.toggle("passe", calme || li.getBoundingClientRect().top < repere);
+}
+addEventListener("scroll", suivreFrise, { passive: true });
+addEventListener("resize", suivreFrise);
+suivreFrise();
+
+/* Clients : deux rangées défilantes construites depuis la liste (qui reste lue par les lecteurs d'écran) */
+const listeClients = document.querySelector(".clients-grille");
+if (!calme) {
+  const logos = [...listeClients.querySelectorAll("img")];
+  const defile = document.createElement("div");
+  defile.className = "clients-defile";
+  defile.setAttribute("aria-hidden", "true");
+  const moitie = Math.ceil(logos.length / 2);
+  for (const groupe of [logos.slice(0, moitie), logos.slice(moitie)]) {
+    const rang = document.createElement("div");
+    rang.className = "rang";
+    // Deux passages identiques : la translation de -50 % boucle sans à-coup.
+    for (const img of [...groupe, ...groupe]) {
+      const carte = document.createElement("div");
+      carte.className = "logo-client";
+      const cadre = document.createElement("span");
+      const copie = document.createElement("img");
+      copie.src = img.getAttribute("src");
+      copie.alt = "";
+      copie.loading = "lazy";
+      cadre.append(copie);
+      const nom = document.createElement("em");
+      nom.textContent = img.alt;
+      carte.append(cadre, nom);
+      rang.append(carte);
+    }
+    defile.append(rang);
+  }
+  listeClients.classList.add("sr-only");
+  listeClients.after(defile);
+}
+
+/* Yeux et curseur : souris seulement, coupés si mouvement réduit */
 if (!calme && !matchMedia("(hover: none)").matches) {
   const pupilles = [...document.querySelectorAll(".pupille")];
   const svg = document.querySelector(".avatar svg");
