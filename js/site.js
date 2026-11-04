@@ -64,6 +64,7 @@ document.getElementById("selection").addEventListener("click", (e) => {
   const cible = vignettes.find((v) => v.querySelector("a").getAttribute("href") === projet.getAttribute("href"));
   if (!cible) return;
   e.preventDefault();
+  if (courant !== "tout") history.replaceState(null, "", "#toutes");
   filtrer("tout");
   ouvrir(cible, projet);
 });
@@ -78,7 +79,7 @@ vis.addEventListener("keydown", (e) => {
 });
 vis.addEventListener("close", () => origine?.focus());
 let x0 = null;
-vis.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+vis.addEventListener("touchstart", (e) => { x0 = e.touches.length === 1 ? e.touches[0].clientX : null; }, { passive: true });
 vis.addEventListener("touchend", (e) => {
   if (x0 === null) return;
   const dx = e.changedTouches[0].clientX - x0;

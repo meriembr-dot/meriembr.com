@@ -55,6 +55,7 @@ img { display: block; max-width: 100%; }
 /* Bandeau clients */
 .bandeau { border-bottom: 1px solid var(--ligne); overflow: hidden; padding: 1.4rem 0; }
 .piste { display: flex; gap: 3rem; padding-right: 3rem; width: max-content; animation: defile 60s linear infinite; font: italic 400 1.9rem var(--serif); color: var(--doux); white-space: nowrap; }
+.bandeau:hover .piste { animation-play-state: paused; }
 .piste > span[aria-hidden] { display: contents; }
 .piste span span::after, .piste > span:not([aria-hidden])::after { content: "*"; margin-left: 3rem; color: var(--accent); font: 400 1.2rem var(--sans); vertical-align: middle; }
 @keyframes defile { to { transform: translateX(-50%); } }

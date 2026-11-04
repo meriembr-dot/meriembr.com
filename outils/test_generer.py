@@ -103,7 +103,9 @@ def test_rendu_travaux():
 
 def test_rendu_selection():
     sel = [{"fichier": "img/portfolio/web/1-a.jpg", "fr": "Web, A & B", "en": "Web, A and B"}] * 2
-    h = g.rendu_selection(sel, "fr", "../")
+    tr = [{"fichier": "img/portfolio/web/1-a.jpg", "min": "img/min/web/1-a.webp"}]
+    h = g.rendu_selection(sel, "fr", "../", tr)
+    assert '<img src="../img/min/web/1-a.webp"' in h
     assert h.count('<a class="projet"') == 2
     assert 'href="../img/portfolio/web/1-a.jpg" data-fichier="img/portfolio/web/1-a.jpg"' in h
     assert '<span>01</span><span>Web, A &amp; B</span>' in h and '<span>02</span>' in h
