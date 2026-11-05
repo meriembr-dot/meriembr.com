@@ -128,18 +128,30 @@ document.querySelectorAll(".visible-au-scroll").forEach((el) => obs.observe(el))
 
 const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-/* Frise : la ligne se remplit avec le défilement, chaque étape franchie s'allume */
-const zone = document.querySelector(".frise-zone");
-const etapes = [...zone.querySelectorAll(".frise li")];
-function suivreFrise() {
-  const repere = innerHeight * 0.6;
-  const r = zone.getBoundingClientRect();
-  zone.style.setProperty("--p", calme ? 1 : Math.min(1, Math.max(0, (repere - r.top) / r.height)));
-  for (const li of etapes) li.classList.toggle("passe", calme || li.getBoundingClientRect().top < repere);
+/* Chronologie : un clic sur une date ouvre sa fiche (une seule à la fois), Échap ou clic ailleurs la ferme */
+const dates = [...document.querySelectorAll(".chrono .date")];
+function fermerFiches(saufBouton) {
+  for (const b of dates) {
+    if (b === saufBouton) continue;
+    b.setAttribute("aria-expanded", "false");
+    document.getElementById(b.getAttribute("aria-controls")).hidden = true;
+  }
 }
-addEventListener("scroll", suivreFrise, { passive: true });
-addEventListener("resize", suivreFrise);
-suivreFrise();
+for (const b of dates) {
+  const fiche = document.getElementById(b.getAttribute("aria-controls"));
+  b.addEventListener("click", () => {
+    const ouvrir = b.getAttribute("aria-expanded") !== "true";
+    fermerFiches(b);
+    b.setAttribute("aria-expanded", String(ouvrir));
+    fiche.hidden = !ouvrir;
+  });
+  fiche.querySelector(".carte-fermer").addEventListener("click", () => { fermerFiches(); b.focus(); });
+}
+addEventListener("keydown", (e) => {
+  const ouvert = dates.find((b) => b.getAttribute("aria-expanded") === "true");
+  if (e.key === "Escape" && ouvert && !vis.open) { fermerFiches(); ouvert.focus(); }
+});
+addEventListener("click", (e) => { if (!e.target.closest(".etape")) fermerFiches(); });
 
 /* Clients : deux rangées défilantes construites depuis la liste (qui reste lue par les lecteurs d'écran) */
 const listeClients = document.querySelector(".clients-grille");
