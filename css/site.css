@@ -1,6 +1,7 @@
 @font-face { font-family: "Inter Tight"; src: url("../fonts/inter-tight.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
 @font-face { font-family: "Instrument Serif"; src: url("../fonts/instrument-serif.woff2") format("woff2"); font-display: swap; }
 @font-face { font-family: "Instrument Serif"; src: url("../fonts/instrument-serif-italic.woff2") format("woff2"); font-style: italic; font-display: swap; }
+@font-face { font-family: "Cathalia"; src: url("../fonts/cathalia.woff2") format("woff2"); font-display: swap; }
 
 :root {
   --fond: #0E0E10; --surface: #17171A; --ligne: #2A2A2E;
@@ -42,10 +43,16 @@ img { display: block; max-width: 100%; }
 .hero-grille { display: grid; gap: 2rem; align-items: end; }
 @media (min-width: 960px) { .hero-grille { grid-template-columns: 1fr 460px; } }
 .surtitre { font-size: .9rem; color: var(--doux); letter-spacing: .08em; text-transform: uppercase; margin: 0 0 1.5rem; }
-.nom { font: 600 clamp(3.5rem, 11vw, 11rem)/.86 var(--sans); letter-spacing: -.045em; margin: 0; }
-.nom em { font: italic 400 1.04em/1 var(--serif); letter-spacing: -.02em; color: var(--accent); }
-.hero-bas { display: flex; flex-wrap: wrap; gap: 1.5rem 4rem; margin-top: 2.5rem; color: var(--doux); }
-.hero-bas strong { display: block; color: var(--texte); font-weight: 500; font-size: 1.05rem; }
+.nom { font: 600 clamp(2.6rem, 6.2vw, 6rem)/1 var(--sans); letter-spacing: -.04em; margin: 0; }
+.nom .script { display: block; margin-top: .15em; font: 400 clamp(2.2rem, 4.6vw, 4.6rem)/1.3 "Cathalia", var(--serif); letter-spacing: 0; color: var(--accent); }
+.metiers { margin: .8rem 0 2rem; font: 500 clamp(1rem, 1.6vw, 1.35rem)/1.3 var(--sans); letter-spacing: .08em; text-transform: uppercase; }
+.accroche { max-width: 34ch; margin: 0 0 2.2rem; font-size: clamp(1.15rem, 1.8vw, 1.6rem); line-height: 1.4; }
+.hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2.2rem; }
+.btn-accent { display: inline-flex; align-items: center; min-height: 52px; padding: 0 1.6rem; background: var(--accent); color: var(--fond); font-weight: 600; letter-spacing: .05em; text-transform: uppercase; text-decoration: none; transition: background .25s; }
+.btn-accent:hover { background: var(--texte); }
+.btn-lien { display: inline-flex; align-items: center; min-height: 44px; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; text-decoration: none; border-bottom: 1px solid currentColor; transition: color .25s; }
+.btn-lien:hover { color: var(--accent); }
+.experience { margin: 2.2rem 0 0; color: var(--doux); font-size: .8rem; letter-spacing: .4em; text-transform: uppercase; }
 
 /* Avatar qui suit la souris */
 .avatar { position: relative; width: 100%; max-width: 460px; aspect-ratio: 4 / 5; border-radius: 10px; background: #0b0b0b; border: 1px solid var(--ligne); overflow: hidden; justify-self: end; }
@@ -115,32 +122,34 @@ img { display: block; max-width: 100%; }
 
 /* Parcours */
 #parcours { padding-top: 0; }
-.presentation { max-width: 62ch; margin-bottom: 3.5rem; font-size: 1.15rem; }
+.presentation { max-width: 75ch; margin-bottom: 4rem; font-size: 1.15rem; }
 .presentation p { margin: 0 0 1rem; }
-/* Frise : ligne qui se remplit au défilement, points qui s'allument, étapes qui glissent */
-.frise-zone { position: relative; }
-.frise-ligne { position: absolute; top: 0; bottom: 0; left: 11px; width: 2px; background: var(--ligne); }
-.frise-progression { height: calc(var(--p, 0) * 100%); background: var(--accent); box-shadow: 0 0 14px var(--accent); }
-.frise { list-style: none; margin: 0; padding: 0; display: grid; gap: 2.5rem; }
-.frise li { position: relative; display: grid; gap: .3rem; padding-left: 3rem; }
-.frise .point { position: absolute; left: 4px; top: .6rem; width: 16px; height: 16px; border-radius: 50%; background: var(--fond); border: 2px solid var(--ligne); transition: background .4s, border-color .4s, box-shadow .4s; }
-.frise li.passe .point { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 6px rgb(228 255 90 / .15), 0 0 18px var(--accent); }
-.frise .periode { font: italic 400 clamp(2rem, 4vw, 3.2rem)/1 var(--serif); color: var(--doux); transition: color .4s; }
-.frise li.passe .periode { color: var(--accent); }
-.frise strong { font-weight: 500; font-size: 1.25rem; letter-spacing: -.01em; }
-.frise li > span:last-child { color: var(--doux); }
-.frise li.visible-au-scroll { transform: translateX(-32px); }
-.frise li.visible-au-scroll.vu, .no-js .frise li.visible-au-scroll { transform: none; }
+.presentation .sous-titre { margin-bottom: 1.6rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; }
+
+/* Chronologie horizontale : date au survol en accent, fiche au clic */
+.chrono { position: relative; list-style: none; margin: 0; padding: 0; display: grid; gap: 1.2rem; }
+.etape { position: relative; }
+.date { display: grid; grid-template-columns: auto 16px auto; align-items: center; gap: .8rem; min-height: 44px; padding: 0; border: 0; background: none; color: var(--doux); font: 500 1.4rem/1 var(--sans); letter-spacing: .02em; font-variant-numeric: tabular-nums; cursor: pointer; transition: color .25s; }
+.date .point { width: 14px; height: 14px; border-radius: 50%; background: var(--doux); transition: background .25s, box-shadow .25s; }
+.date:hover, .date:focus-visible, .date[aria-expanded="true"] { color: var(--accent); }
+.date:hover .point, .date:focus-visible .point, .date[aria-expanded="true"] .point { background: var(--accent); box-shadow: 0 0 0 6px rgb(228 255 90 / .15), 0 0 16px var(--accent); }
+.carte-etape { position: relative; width: min(100%, 300px); margin: 1rem 0 .5rem; border-radius: 18px; overflow: hidden; text-align: center; color: var(--fond); box-shadow: 0 24px 60px rgb(0 0 0 / .55); animation: carte .3s cubic-bezier(.2,.7,.2,1); }
+.carte-etape h3 { margin: 0; padding: 1rem 2.4rem 1rem 1.2rem; background: var(--accent); font: 500 1.3rem/1.2 var(--sans); letter-spacing: -.01em; }
+.carte-etape p { margin: 0; padding: 1rem 1.2rem; background: #9C978F; font-size: .98rem; line-height: 1.45; }
+.carte-etape .structure { background: var(--texte); font-weight: 500; }
+.carte-fermer { position: absolute; top: .55rem; right: .55rem; width: 32px; height: 32px; border: 0; border-radius: 50%; background: rgb(14 14 16 / .12); color: var(--fond); font-size: 1.3rem; line-height: 1; cursor: pointer; }
+@keyframes carte { from { opacity: 0; transform: translateY(10px) scale(.97); } }
 @media (min-width: 900px) {
-  .frise-ligne { left: 50%; margin-left: -1px; }
-  .frise li { width: 50%; padding: 0 3.5rem 0 0; text-align: right; }
-  .frise li:nth-child(even) { margin-left: 50%; padding: 0 0 0 3.5rem; text-align: left; }
-  .frise li .point { left: auto; right: -9px; }
-  .frise li:nth-child(even) .point { right: auto; left: -9px; }
-  .frise li:nth-child(even).visible-au-scroll { transform: translateX(32px); }
-  .frise li:nth-child(even).visible-au-scroll.vu { transform: none; }
-  .frise { gap: 1rem; }
+  .chrono { grid-template-columns: repeat(7, 1fr); gap: 0; padding: 4rem 0; }
+  .chrono::before { content: ""; position: absolute; left: 3%; right: 3%; top: 50%; height: 1px; background: var(--doux); opacity: .6; }
+  .date { grid-template-columns: 1fr; grid-template-rows: auto 16px auto; justify-items: center; width: 100%; gap: .9rem; }
+  .carte-etape { position: absolute; z-index: 5; top: 50%; left: 50%; width: 260px; margin: 0; transform: translate(-50%, -50%); animation-name: carte-centre; }
+  .etape:first-child .carte-etape { left: 0; transform: translate(0, -50%); }
+  .etape:last-child .carte-etape { left: auto; right: 0; transform: translate(0, -50%); }
 }
+@keyframes carte-centre { from { opacity: 0; } }
+.sous-titre-section { margin: -1.5rem 0 2.5rem; color: var(--doux); font-size: 1.1rem; }
+.contact .contact-texte { color: var(--texte); max-width: 42ch; font-size: clamp(1.2rem, 2vw, 1.6rem); line-height: 1.4; }
 
 /* Clients : deux rangées de logos qui défilent en sens inverse */
 .clients { padding-top: 0; }
