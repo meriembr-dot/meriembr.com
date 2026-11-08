@@ -22,6 +22,13 @@ CATEGORIES = [
     ("pos_panels_dressing", "PLV et habillage", "POS and dressing"),
     ("gaming", "Gaming", "Gaming"),
 ]
+# Domaines d'expertise affichés sur le site : la catégorie d'origine reste dans travaux.json.
+DOMAINES = [
+    ("identite", "Identité visuelle", "Visual identity", ("logos", "visual_identity")),
+    ("packaging", "Packaging & design produit", "Packaging & product design", ("packaging_labels",)),
+    ("edition", "Édition & Print", "Publishing & Print", ("books_magazines", "flyers_leaflets", "various")),
+    ("digital", "Digital & Communication", "Digital & Communication", ("web", "gaming", "pos_panels_dressing")),
+]
 TAILLE_MIN = 600
 
 
@@ -93,38 +100,34 @@ def libelle(cle, langue):
     raise KeyError(cle)
 
 
-def rendu_filtres(travaux, langue):
-    tout = "Tout" if langue == "fr" else "All"
-    boutons = [f'<button type="button" class="pilule" data-cat="tout" aria-pressed="true">{tout} ({len(travaux)})</button>']
-    for cle, _, _ in CATEGORIES:
-        n = sum(t["categorie"] == cle for t in travaux)
-        if n:
-            boutons.append(f'<button type="button" class="pilule" data-cat="{cle}" aria-pressed="false">{html.escape(libelle(cle, langue))} ({n})</button>')
-    return "\n" + "\n".join(boutons) + "\n"
+def domaine(cat):
+    for cle, _, _, cats in DOMAINES:
+        if cat in cats:
+            return cle
+    raise KeyError(cat)
 
 
 def rendu_travaux(travaux, langue, prefixe, racine=Path(".")):
+    """Une galerie par domaine, toutes visibles sans JS."""
     e = lambda s: html.escape(s, quote=True)
-    lignes = []
-    for t in travaux:
-        larg, haut = Image.open(racine / t["min"]).size
-        alt = libelle(t["categorie"], langue) + (f', {t["client"]}' if t["client"] else "")
-        pdf = f' data-pdf="{e(prefixe + t["pdf"])}"' if t["pdf"] else ""
-        lignes.append(
-            f'<li class="vignette" data-cat="{t["categorie"]}"><a href="{e(prefixe + t["fichier"])}"{pdf}>'
-            f'<img src="{e(prefixe + t["min"])}" width="{larg}" height="{haut}" alt="{e(alt)}" loading="lazy" decoding="async">'
-            f'<span class="vignette-legende">{e(alt)}</span></a></li>')
-    return "\n" + "\n".join(lignes) + "\n"
-
-
-def rendu_selection(selection, langue, prefixe, travaux):
-    e = lambda s: html.escape(s, quote=True)
-    mini = {t["fichier"]: t["min"] for t in travaux}
-    return "\n" + "\n".join(
-        f'<a class="projet" href="{e(prefixe + s["fichier"])}" data-fichier="{e(s["fichier"])}">'
-        f'<div class="cadre"><img src="{e(prefixe + mini[s["fichier"]])}" alt="{e(s[langue])}" loading="lazy" decoding="async"></div>'
-        f'<div class="legende"><span>{i:02d}</span><span>{e(s[langue])}</span></div></a>'
-        for i, s in enumerate(selection, 1)) + "\n"
+    blocs = []
+    for cle, fr, en, _ in DOMAINES:
+        liste = [t for t in travaux if domaine(t["categorie"]) == cle]
+        lignes = []
+        for t in liste:
+            larg, haut = Image.open(racine / t["min"]).size
+            alt = libelle(t["categorie"], langue) + (f', {t["client"]}' if t["client"] else "")
+            pdf = f' data-pdf="{e(prefixe + t["pdf"])}"' if t["pdf"] else ""
+            lignes.append(
+                f'<li class="vignette" data-cat="{t["categorie"]}"><a href="{e(prefixe + t["fichier"])}"{pdf}>'
+                f'<img src="{e(prefixe + t["min"])}" width="{larg}" height="{haut}" alt="{e(alt)}" loading="lazy" decoding="async">'
+                f'<span class="vignette-legende">{e(alt)}</span></a></li>')
+        titre = fr if langue == "fr" else en
+        blocs.append(
+            f'<section class="galerie" id="galerie-{cle}" data-domaine="{cle}" aria-labelledby="titre-{cle}">'
+            f'<h3 id="titre-{cle}">{e(titre)} <span>({len(liste)})</span></h3>\n'
+            f'<ul class="mosaique">\n' + "\n".join(lignes) + "\n</ul></section>")
+    return "\n" + "\n".join(blocs) + "\n"
 
 
 def rendu_bandeau(clients):
@@ -152,17 +155,14 @@ def main(racine=Path(".")):
     (racine / "data/travaux.json").write_text(
         json.dumps(travaux, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     clients = json.loads((racine / "data/clients.json").read_text(encoding="utf-8"))
-    selection = json.loads((racine / "data/selection.json").read_text(encoding="utf-8"))
     for page, langue, prefixe in PAGES:
         f = racine / page
         if not f.exists():
             print("absent, ignoré :", page)
             continue
         h = f.read_text(encoding="utf-8")
-        h = injecter(h, "filtres", rendu_filtres(travaux, langue))
         h = injecter(h, "travaux", rendu_travaux(travaux, langue, prefixe, racine))
         h = injecter(h, "clients", rendu_clients(clients, prefixe))
-        h = injecter(h, "selection", rendu_selection(selection, langue, prefixe, travaux))
         h = injecter(h, "bandeau", rendu_bandeau(clients))
         f.write_text(h, encoding="utf-8")
     print(len(travaux), "travaux,", len(clients), "clients")

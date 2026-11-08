@@ -3,18 +3,22 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { lireHash, visibles, voisin } from "./galerie.js";
 
+const D = ["identite", "packaging", "edition", "digital"];
+
 test("lireHash", () => {
-  assert.equal(lireHash("#travaux/packaging_labels"), "packaging_labels");
-  assert.equal(lireHash("#travaux"), "tout");
-  assert.equal(lireHash(""), "tout");
-  assert.equal(lireHash("#contact"), "tout");
+  assert.equal(lireHash("#expertise/identite", D), "identite");
+  assert.equal(lireHash("#galerie-digital", D), "digital");
+  assert.equal(lireHash("#expertise/inconnu", D), null);
+  assert.equal(lireHash("#expertise", D), null);
+  assert.equal(lireHash("", D), null);
+  assert.equal(lireHash("#travaux/packaging_labels", D), null);
 });
 
 test("visibles", () => {
-  const items = [{ cat: "logos" }, { cat: "web" }, { cat: "logos" }];
-  assert.deepEqual(visibles(items, "tout"), [0, 1, 2]);
-  assert.deepEqual(visibles(items, "logos"), [0, 2]);
-  assert.deepEqual(visibles(items, "gaming"), []);
+  const items = [{ domaine: "identite" }, { domaine: "digital" }, { domaine: "identite" }];
+  assert.deepEqual(visibles(items, "identite"), [0, 2]);
+  assert.deepEqual(visibles(items, "edition"), []);
+  assert.deepEqual(visibles(items, null), []);
 });
 
 test("voisin boucle", () => {

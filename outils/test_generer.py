@@ -80,11 +80,23 @@ def _travaux_exemple():
     ]
 
 
-def test_rendu_filtres():
-    h = g.rendu_filtres(_travaux_exemple(), "fr")
-    assert 'data-cat="tout" aria-pressed="true"' in h and "Tout (2)" in h
-    assert "Logos (1)" in h and "Livres et magazines (1)" in h
-    assert "Gaming" not in h  # catégorie vide non affichée
+def test_domaine():
+    assert g.domaine("logos") == g.domaine("visual_identity") == "identite"
+    assert g.domaine("packaging_labels") == "packaging"
+    assert {g.domaine(c) for c in ("books_magazines", "flyers_leaflets", "various")} == {"edition"}
+    assert {g.domaine(c) for c in ("web", "gaming", "pos_panels_dressing")} == {"digital"}
+    # Chaque catégorie d'origine appartient à exactement un domaine.
+    toutes = [c for _, _, _, cats in g.DOMAINES for c in cats]
+    assert sorted(toutes) == sorted(c for c, _, _ in g.CATEGORIES)
+
+
+def test_repartition_reelle():
+    racine = Path(__file__).parent.parent
+    travaux = json.loads((racine / "data/travaux.json").read_text(encoding="utf-8"))
+    compte = {}
+    for t in travaux:
+        compte[g.domaine(t["categorie"])] = compte.get(g.domaine(t["categorie"]), 0) + 1
+    assert compte == {"identite": 44, "packaging": 28, "edition": 48, "digital": 59}
 
 
 def test_rendu_travaux():
@@ -99,17 +111,13 @@ def test_rendu_travaux():
     assert 'alt="Logos, A &amp; B"' in h
     assert '<span class="vignette-legende">Logos, A &amp; B</span>' in h
     assert 'data-pdf="../pdf/books_magazines/3-c.pdf"' in h
-
-
-def test_rendu_selection():
-    sel = [{"fichier": "img/portfolio/web/1-a.jpg", "fr": "Web, A & B", "en": "Web, A and B"}] * 2
-    tr = [{"fichier": "img/portfolio/web/1-a.jpg", "min": "img/min/web/1-a.webp"}]
-    h = g.rendu_selection(sel, "fr", "../", tr)
-    assert '<img src="../img/min/web/1-a.webp"' in h
-    assert h.count('<a class="projet"') == 2
-    assert 'href="../img/portfolio/web/1-a.jpg" data-fichier="img/portfolio/web/1-a.jpg"' in h
-    assert '<span>01</span><span>Web, A &amp; B</span>' in h and '<span>02</span>' in h
-    assert 'alt="Web, A &amp; B"' in h
+    # 4 galeries, dans l'ordre, avec leur compte ; un domaine vide reste présent avec (0).
+    assert h.count('<section class="galerie"') == 4
+    assert h.index('id="galerie-identite"') < h.index('id="galerie-packaging"') < h.index('id="galerie-edition"')
+    assert 'Visual identity <span>(1)</span>' in h and 'Publishing &amp; Print <span>(1)</span>' in h
+    assert 'Packaging &amp; product design <span>(0)</span>' in h
+    edition = h[h.index('id="galerie-edition"'):h.index('id="galerie-digital"')]
+    assert "3-c.webp" in edition and "1-a.webp" not in edition
 
 
 def test_rendu_bandeau():
