@@ -1,18 +1,24 @@
 import { lireHash, visibles, voisin } from "./galerie.js";
 
-const grille = document.getElementById("grille");
-const vignettes = [...grille.querySelectorAll(".vignette")];
-const items = vignettes.map((v) => ({ cat: v.dataset.cat }));
-const boutons = [...document.querySelectorAll("#filtres [data-cat]")];
-let courant = "tout";
+const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const modifie = (e) => e.ctrlKey || e.metaKey || e.shiftKey;
 
-/* Voir plus : la grille montre PAS vignettes de plus à chaque clic, remis à zéro à chaque filtre */
+/* Domaines d'expertise : un clic sur une carte ouvre sa galerie sous les cartes (lien profond #expertise/<domaine>) */
+const galeries = [...document.querySelectorAll(".galerie")];
+const DOMAINES = galeries.map((g) => g.dataset.domaine);
+const liensDomaine = [...document.querySelectorAll(".domaine-lien")];
+const vignettes = [...document.querySelectorAll(".galerie .vignette")];
+const items = vignettes.map((v) => ({ domaine: v.closest(".galerie").dataset.domaine }));
+let courant = null;
+
+/* Voir plus : la galerie montre PAS vignettes de plus à chaque clic, remis à zéro à chaque domaine */
 const PAS = 16;
 let montres = PAS;
 const plus = document.getElementById("plus");
 const plusReste = plus.querySelector(".plus-reste");
 
 function afficherGrille() {
+  galeries.forEach((g) => g.classList.toggle("ouverte", g.dataset.domaine === courant));
   const liste = visibles(items, courant);
   const ok = new Set(liste.slice(0, montres));
   vignettes.forEach((v, i) => { v.hidden = !ok.has(i); });
@@ -21,30 +27,34 @@ function afficherGrille() {
   plusReste.textContent = `(${reste})`;
 }
 
-function filtrer(cat) {
-  courant = boutons.some((b) => b.dataset.cat === cat) ? cat : "tout";
+function choisir(domaine, defiler) {
+  courant = domaine;
   montres = PAS;
   afficherGrille();
-  boutons.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.cat === courant)));
+  liensDomaine.forEach((l) => l.setAttribute("aria-expanded", String(l.dataset.domaine === courant)));
+  if (courant && defiler) document.getElementById(`galerie-${courant}`).scrollIntoView({ behavior: calme ? "auto" : "smooth" });
 }
 
+liensDomaine.forEach((l) => {
+  l.setAttribute("aria-controls", `galerie-${l.dataset.domaine}`);
+  l.addEventListener("click", (e) => {
+    if (modifie(e)) return;
+    e.preventDefault();
+    const domaine = l.dataset.domaine === courant ? null : l.dataset.domaine;
+    history.pushState(null, "", domaine ? `#expertise/${domaine}` : "#expertise");
+    choisir(domaine, true);
+  });
+});
 plus.addEventListener("click", () => {
   const premier = visibles(items, courant)[montres];
   montres += PAS;
   afficherGrille();
   vignettes[premier]?.querySelector("a").focus({ preventScroll: true });
 });
+addEventListener("popstate", () => choisir(lireHash(location.hash, DOMAINES), true));
+choisir(lireHash(location.hash, DOMAINES), true);
 
-boutons.forEach((b) => b.addEventListener("click", () => {
-  const cat = b.dataset.cat;
-  history.pushState(null, "", cat === "tout" ? "#toutes" : `#travaux/${cat}`);
-  filtrer(cat);
-}));
-addEventListener("popstate", () => filtrer(lireHash(location.hash)));
-filtrer(lireHash(location.hash));
-if (location.hash.startsWith("#travaux/")) document.getElementById("toutes").scrollIntoView();
-
-/* Visionneuse */
+/* Visionneuse : parcourt la galerie ouverte, ou les projets « Ils m'ont fait confiance » */
 const vis = document.getElementById("visionneuse");
 const visImg = vis.querySelector(".vis-image");
 const visLegende = vis.querySelector(".vis-legende");
@@ -55,7 +65,7 @@ let pos = 0;
 let origine = null;
 
 function afficher() {
-  const lien = vignettes[liste[pos]].querySelector("a");
+  const lien = liste[pos];
   const alt = lien.querySelector("img").alt;
   visImg.src = lien.href;
   visImg.alt = alt;
@@ -65,30 +75,26 @@ function afficher() {
   if (lien.dataset.pdf) visPdf.href = lien.dataset.pdf;
 }
 
-function ouvrir(vignette, depuis) {
-  liste = visibles(items, courant);
-  pos = liste.indexOf(vignettes.indexOf(vignette));
-  origine = depuis;
+function ouvrir(liens, lien) {
+  liste = liens;
+  pos = liens.indexOf(lien);
+  origine = lien;
   afficher();
   vis.showModal();
 }
 
-const modifie = (e) => e.ctrlKey || e.metaKey || e.shiftKey;
-grille.addEventListener("click", (e) => {
+document.getElementById("galeries").addEventListener("click", (e) => {
   const lien = e.target.closest(".vignette a");
   if (!lien || modifie(e)) return;
   e.preventDefault();
-  ouvrir(lien.parentElement, lien);
+  ouvrir(visibles(items, courant).map((i) => vignettes[i].querySelector("a")), lien);
 });
-document.getElementById("selection").addEventListener("click", (e) => {
-  const projet = e.target.closest(".projet");
-  if (!projet || modifie(e)) return;
-  const cible = vignettes.find((v) => v.querySelector("a").getAttribute("href") === projet.getAttribute("href"));
-  if (!cible) return;
+const liensConfiance = [...document.querySelectorAll(".projet-confiance")];
+document.getElementById("confiance").addEventListener("click", (e) => {
+  const lien = e.target.closest(".projet-confiance");
+  if (!lien || modifie(e)) return;
   e.preventDefault();
-  if (courant !== "tout") history.replaceState(null, "", "#toutes");
-  filtrer("tout");
-  ouvrir(cible, projet);
+  ouvrir(liensConfiance, lien);
 });
 const pas = (n) => { pos = voisin(pos, liste.length, n); afficher(); };
 vis.querySelector(".vis-prec").addEventListener("click", () => pas(-1));
@@ -125,8 +131,6 @@ const obs = new IntersectionObserver((entrees) => entrees.forEach((e) => {
   if (e.isIntersecting) { e.target.classList.add("vu"); obs.unobserve(e.target); }
 }), { threshold: 0.15 });
 document.querySelectorAll(".visible-au-scroll").forEach((el) => obs.observe(el));
-
-const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /* Chronologie : un clic sur une date ouvre sa fiche (une seule à la fois), Échap ou clic ailleurs la ferme */
 const dates = [...document.querySelectorAll(".chrono .date")];
@@ -185,27 +189,17 @@ if (!calme) {
   listeClients.after(defile);
 }
 
-/* Yeux et curseur : souris seulement, coupés si mouvement réduit */
+/* Curseur : souris seulement, coupé si mouvement réduit */
 if (!calme && !matchMedia("(hover: none)").matches) {
-  const pupilles = [...document.querySelectorAll(".pupille")];
-  const svg = document.querySelector(".avatar svg");
   const curseur = document.querySelector(".curseur");
   const voir = document.documentElement.lang === "en" ? "View" : "Voir";
   addEventListener("pointermove", (e) => {
     curseur.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
     curseur.classList.add("actif");
-    const m = svg.getScreenCTM();
-    if (!m) return;
-    const p = new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse());
-    // Une seule direction pour les deux yeux, depuis le milieu des yeux : regard parallèle, jamais convergent.
-    const a = Math.atan2(p.y - 379, p.x - 647);
-    const d = Math.min(1, Math.hypot(p.x - 647, p.y - 379) / 400);
-    const t = `translate(${Math.cos(a) * d * 16} ${Math.sin(a) * d * 5})`;
-    for (const o of pupilles) o.setAttribute("transform", t);
   });
   document.documentElement.addEventListener("pointerleave", () => curseur.classList.remove("actif"));
   addEventListener("pointerover", (e) => {
-    const grand = !!e.target.closest(".projet, .vignette a");
+    const grand = !!e.target.closest(".projet-confiance, .vignette a");
     curseur.classList.toggle("grand", grand);
     curseur.textContent = grand ? voir : "";
   });
