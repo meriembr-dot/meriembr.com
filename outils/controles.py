@@ -41,14 +41,19 @@ with sync_playwright() as p:
             ok(une_ligne(pg), f"{lg} {larg} : titre du hero sur une ligne")
             ok(pg.evaluate("document.documentElement.scrollWidth") <= larg, f"{lg} {larg} : pas de défilement horizontal")
             pg.screenshot(path=f"{out}/{lg}-{larg}-hero.png")
+            # Captures de sections : en-tête non fixe et images chargées d'avance (rendu seulement).
+            pg.add_style_tag(content=".top{position:absolute!important}.curseur{display:none!important}")
+            pg.evaluate("document.querySelectorAll('img[loading=lazy]').forEach(i => i.loading = 'eager')")
             for nom, sel in (("confiance", "#confiance"), ("parcours", "#parcours"),
                              ("collaborations", "#collaborations"), ("contact", "#contact")):
                 pg.locator(sel).scroll_into_view_if_needed()
                 pg.wait_for_timeout(300)
                 if nom == "parcours":
                     pg.locator(".chrono .date").last.click()
+                    pg.wait_for_timeout(500)
                 pg.locator(sel).screenshot(path=f"{out}/{lg}-{larg}-{nom}.png")
             pg.locator(".domaine-lien").first.click()
+            pg.wait_for_load_state("networkidle")
             pg.wait_for_timeout(600)
             pg.screenshot(path=f"{out}/{lg}-{larg}-expertise.png", full_page=False)
             pg.locator("#expertise").screenshot(path=f"{out}/{lg}-{larg}-expertise-complete.png")
