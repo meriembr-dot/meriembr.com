@@ -118,7 +118,7 @@ img { display: block; max-width: 100%; }
 .projet-confiance:hover img, .projet-confiance:focus-visible img { transform: scale(1.03); }
 
 .projet-lien { position: relative; }
-.voir-projet { position: absolute; right: 1rem; bottom: 1rem; display: inline-flex; align-items: center; gap: .4rem; min-height: 40px; padding: 0 1.1rem; border-radius: 999px; background: rgb(14 14 16 / .82); color: var(--texte); font-size: .9rem; font-weight: 500; letter-spacing: .02em; backdrop-filter: blur(6px); transition: background .25s, color .25s; }
+.voir-projet { position: absolute; left: 1rem; bottom: 1rem; display: inline-flex; align-items: center; gap: .4rem; min-height: 40px; padding: 0 1.1rem; border-radius: 999px; background: rgb(14 14 16 / .82); color: var(--texte); font-size: .9rem; font-weight: 500; letter-spacing: .02em; backdrop-filter: blur(6px); transition: background .25s, color .25s; }
 .projet-lien:hover .voir-projet, .projet-lien:focus-visible .voir-projet { background: var(--accent); color: var(--fond); }
 
 /* Témoignages (section masquée tant qu'aucun texte n'est fourni) */
@@ -205,8 +205,7 @@ img { display: block; max-width: 100%; }
 
 /* Page projet : ouverture pleine largeur, en-tête éditorial, mosaïque calquée sur la composition de Meriem */
 /* Hauteur bornée ; cadrage en bas à droite pour garder les mains et le monogramme */
-.projet-ouverture { width: 100%; height: clamp(260px, min(64svh, 75vw), 720px); margin-top: 76px; object-fit: cover; object-position: 100% 92%; }
-.projet-entete { padding: 4.5rem 0 5rem; }
+.projet-entete { padding: calc(76px + 3.5rem) 0 5rem; }
 .retour { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; margin-bottom: 2.5rem; color: var(--doux); text-decoration: none; transition: color .25s; }
 .retour:hover { color: var(--accent); }
 .projet-entete .surtitre { margin-bottom: 1rem; }
