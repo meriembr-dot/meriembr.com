@@ -204,7 +204,8 @@ img { display: block; max-width: 100%; }
 .pied { padding: 2rem 0 3rem; color: var(--doux); font-size: .9rem; }
 
 /* Page projet : ouverture pleine largeur, en-tête éditorial, mosaïque calquée sur la composition de Meriem */
-.projet-ouverture { width: 100%; height: clamp(280px, 64svh, 720px); margin-top: 76px; object-fit: cover; object-position: 50% 80%; }
+/* Hauteur bornée ; cadrage en bas à droite pour garder les mains et le monogramme */
+.projet-ouverture { width: 100%; height: clamp(260px, min(64svh, 75vw), 720px); margin-top: 76px; object-fit: cover; object-position: 100% 92%; }
 .projet-entete { padding: 4.5rem 0 5rem; }
 .retour { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; margin-bottom: 2.5rem; color: var(--doux); text-decoration: none; transition: color .25s; }
 .retour:hover { color: var(--accent); }
