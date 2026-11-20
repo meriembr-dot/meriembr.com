@@ -1,7 +1,5 @@
-import { lireHash, visibles, voisin } from "./galerie.js";
-
-const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const modifie = (e) => e.ctrlKey || e.metaKey || e.shiftKey;
+import { lireHash, visibles } from "./galerie.js";
+import { calme, modifie, ouvrir } from "./commun.js";
 
 /* Domaines d'expertise : un clic sur une carte ouvre sa galerie sous les cartes (lien profond #expertise/<domaine>) */
 const galeries = [...document.querySelectorAll(".galerie")];
@@ -54,76 +52,19 @@ plus.addEventListener("click", () => {
 addEventListener("popstate", () => choisir(lireHash(location.hash, DOMAINES), true));
 choisir(lireHash(location.hash, DOMAINES), true);
 
-/* Visionneuse : parcourt la galerie ouverte, ou les projets « Ils m'ont fait confiance » */
-const vis = document.getElementById("visionneuse");
-const visImg = vis.querySelector(".vis-image");
-const visLegende = vis.querySelector(".vis-legende");
-const visCompteur = vis.querySelector(".vis-compteur");
-const visPdf = vis.querySelector(".vis-pdf");
-let liste = [];
-let pos = 0;
-let origine = null;
-
-function afficher() {
-  const lien = liste[pos];
-  const alt = lien.querySelector("img").alt;
-  visImg.src = lien.href;
-  visImg.alt = alt;
-  visLegende.textContent = alt;
-  visCompteur.textContent = `${pos + 1} / ${liste.length}`;
-  visPdf.hidden = !lien.dataset.pdf;
-  if (lien.dataset.pdf) visPdf.href = lien.dataset.pdf;
-}
-
-function ouvrir(liens, lien) {
-  liste = liens;
-  pos = liens.indexOf(lien);
-  origine = lien;
-  afficher();
-  vis.showModal();
-}
-
 document.getElementById("galeries").addEventListener("click", (e) => {
   const lien = e.target.closest(".vignette a");
   if (!lien || modifie(e)) return;
   e.preventDefault();
   ouvrir(visibles(items, courant).map((i) => vignettes[i].querySelector("a")), lien);
 });
-const liensConfiance = [...document.querySelectorAll(".projet-confiance")];
+/* Projets de confiance : ceux qui ont une page (.projet-lien) restent de vrais liens */
+const liensConfiance = [...document.querySelectorAll(".projet-confiance:not(.projet-lien)")];
 document.getElementById("confiance").addEventListener("click", (e) => {
-  const lien = e.target.closest(".projet-confiance");
+  const lien = e.target.closest(".projet-confiance:not(.projet-lien)");
   if (!lien || modifie(e)) return;
   e.preventDefault();
   ouvrir(liensConfiance, lien);
-});
-const pas = (n) => { pos = voisin(pos, liste.length, n); afficher(); };
-vis.querySelector(".vis-prec").addEventListener("click", () => pas(-1));
-vis.querySelector(".vis-suiv").addEventListener("click", () => pas(1));
-vis.querySelector(".vis-fermer").addEventListener("click", () => vis.close());
-vis.addEventListener("click", (e) => { if (e.target === vis) vis.close(); });
-vis.addEventListener("keydown", (e) => {
-  if (e.key === "ArrowLeft") pas(-1);
-  if (e.key === "ArrowRight") pas(1);
-});
-vis.addEventListener("close", () => origine?.focus());
-let x0 = null;
-vis.addEventListener("touchstart", (e) => { x0 = e.touches.length === 1 ? e.touches[0].clientX : null; }, { passive: true });
-vis.addEventListener("touchend", (e) => {
-  if (x0 === null) return;
-  const dx = e.changedTouches[0].clientX - x0;
-  if (Math.abs(dx) > 50) pas(dx < 0 ? 1 : -1);
-  x0 = null;
-});
-
-/* Menu mobile */
-const menuBouton = document.getElementById("menu-bouton");
-const menu = document.getElementById("menu");
-menuBouton.addEventListener("click", () => {
-  const ouvert = menu.classList.toggle("ouvert");
-  menuBouton.setAttribute("aria-expanded", String(ouvert));
-});
-menu.addEventListener("click", (e) => {
-  if (e.target.closest("a")) { menu.classList.remove("ouvert"); menuBouton.setAttribute("aria-expanded", "false"); }
 });
 
 /* Apparitions */
@@ -153,7 +94,7 @@ for (const b of dates) {
 }
 addEventListener("keydown", (e) => {
   const ouvert = dates.find((b) => b.getAttribute("aria-expanded") === "true");
-  if (e.key === "Escape" && ouvert && !vis.open) { fermerFiches(); ouvert.focus(); }
+  if (e.key === "Escape" && ouvert && !document.getElementById("visionneuse").open) { fermerFiches(); ouvert.focus(); }
 });
 addEventListener("click", (e) => { if (!e.target.closest(".etape")) fermerFiches(); });
 
@@ -187,20 +128,4 @@ if (!calme) {
   }
   listeClients.classList.add("sr-only");
   listeClients.after(defile);
-}
-
-/* Curseur : souris seulement, coupé si mouvement réduit */
-if (!calme && !matchMedia("(hover: none)").matches) {
-  const curseur = document.querySelector(".curseur");
-  const voir = document.documentElement.lang === "en" ? "View" : "Voir";
-  addEventListener("pointermove", (e) => {
-    curseur.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-    curseur.classList.add("actif");
-  });
-  document.documentElement.addEventListener("pointerleave", () => curseur.classList.remove("actif"));
-  addEventListener("pointerover", (e) => {
-    const grand = !!e.target.closest(".projet-confiance, .vignette a");
-    curseur.classList.toggle("grand", grand);
-    curseur.textContent = grand ? voir : "";
-  });
 }

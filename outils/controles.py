@@ -8,6 +8,8 @@ import sys
 from playwright.sync_api import sync_playwright
 
 base, out = sys.argv[1].rstrip("/"), sys.argv[2]
+PROJET = {"fr": "/projets/kais-et-lorine/", "en": "/en/projects/kais-et-lorine/"}
+ACCUEIL = {"fr": "/", "en": "/en/"}
 ATTENDU = {"identite": 44, "packaging": 28, "edition": 48, "digital": 59}
 echecs = []
 
@@ -99,15 +101,21 @@ with sync_playwright() as p:
         ok(pg.evaluate("document.activeElement === document.querySelector('.galerie.ouverte .vignette a')"), f"{lg} : focus rendu")
 
         # Projets de confiance
-        liens = pg.locator(".projet-confiance")
-        ok(liens.count() == 4, f"{lg} : 4 projets de confiance")
-        for i in range(4):
+        ok(pg.locator(".projet-confiance").count() == 4, f"{lg} : 4 projets de confiance")
+        liens = pg.locator(".projet-confiance:not(.projet-lien)")
+        for i in range(3):
             liens.nth(i).click()
             nom = pg.locator(".vis-legende").inner_text()
             pg.wait_for_function("document.querySelector('.vis-image').complete && document.querySelector('.vis-image').naturalWidth > 0")
-            ok(pg.locator("#visionneuse[open]").count() == 1 and pg.locator(".vis-compteur").inner_text() == f"{i + 1} / 4",
+            ok(pg.locator("#visionneuse[open]").count() == 1 and pg.locator(".vis-compteur").inner_text() == f"{i + 1} / 3",
                f"{lg} : projet {nom} s'ouvre")
             pg.keyboard.press("Escape")
+        # Kais & Lorine : vrai lien vers sa page
+        pg.locator(".projet-lien").click()
+        pg.wait_for_load_state("load")
+        ok(pg.url == base + PROJET[lg] and pg.locator("#visionneuse[open]").count() == 0, f"{lg} : carte Kais & Lorine mène à la page ({pg.url})")
+        pg.go_back()
+        pg.wait_for_load_state("load")
 
         ok(pg.locator("#collaborations h2").inner_text() in ("Mes collaborations", "My collaborations"), f"{lg} : section collaborations")
         ok(pg.locator("#temoignages").count() == 0, f"{lg} : témoignages absents du rendu")
@@ -132,6 +140,67 @@ with sync_playwright() as p:
         pg.goto(url, wait_until="load")
         vis = pg.evaluate("[...document.querySelectorAll('.galerie')].map(g => g.offsetParent !== null ? g.querySelectorAll('.vignette').length : 0)")
         ok(vis == list(ATTENDU.values()), f"{lg} : sans JS, galeries visibles {vis}")
+        ctx.close()
+
+    # Page projet Kais & Lorine
+    for lg, chemin in PROJET.items():
+        url = base + chemin
+        erreurs = []
+        for larg, haut in ((1440, 900), (390, 844)):
+            pg = b.new_page(viewport={"width": larg, "height": haut})
+            pg.on("pageerror", lambda e: erreurs.append(str(e)))
+            pg.on("console", lambda m: m.type == "error" and erreurs.append(m.text))
+            pg.goto(url, wait_until="networkidle")
+            ok(pg.evaluate("document.documentElement.scrollWidth") <= larg, f"projet {lg} {larg} : pas de défilement horizontal")
+            pg.screenshot(path=f"{out}/projet-{lg}-{larg}.png")
+            for _ in range(20):
+                pg.mouse.wheel(0, 500)
+                pg.wait_for_timeout(50)
+            pg.wait_for_function("[...document.querySelectorAll('.projet img')].every(i => i.complete && i.naturalWidth > 0)", timeout=15000)
+            n = pg.evaluate("document.querySelectorAll('.projet-ouverture, .kl-grille a img').length")
+            ok(n == 10, f"projet {lg} {larg} : 10 images (ouverture + 9 visuels) chargées ({n}), plus 2 logos")
+            pg.add_style_tag(content=".top{position:absolute!important}.curseur{display:none!important}")
+            pg.screenshot(path=f"{out}/projet-{lg}-{larg}-complete.png", full_page=True)
+            pg.close()
+
+        pg = b.new_page(viewport={"width": 1440, "height": 900})
+        pg.on("pageerror", lambda e: erreurs.append(str(e)))
+        pg.goto(url, wait_until="networkidle")
+        liens = pg.locator(".kl-grille a")
+        ok(liens.count() == 9, f"projet {lg} : 9 visuels cliquables")
+        premier = liens.first
+        premier.focus()
+        pg.keyboard.press("Enter")
+        pg.wait_for_function("document.querySelector('.vis-image').complete && document.querySelector('.vis-image').naturalWidth > 0")
+        ok(pg.locator("#visionneuse[open]").count() == 1 and pg.locator(".vis-compteur").inner_text() == "1 / 9", f"projet {lg} : visionneuse ouverte (1 / 9)")
+        pg.screenshot(path=f"{out}/projet-{lg}-visionneuse.png")
+        pg.keyboard.press("ArrowRight")
+        ok(pg.locator(".vis-compteur").inner_text() == "2 / 9", f"projet {lg} : flèche droite (2 / 9)")
+        pg.keyboard.press("ArrowLeft")
+        pg.keyboard.press("ArrowLeft")
+        ok(pg.locator(".vis-compteur").inner_text() == "9 / 9", f"projet {lg} : flèche gauche boucle")
+        pg.keyboard.press("Escape")
+        ok(pg.locator("#visionneuse[open]").count() == 0, f"projet {lg} : Échap ferme")
+        ok(pg.evaluate("document.activeElement === document.querySelector('.kl-grille a')"), f"projet {lg} : focus rendu")
+        for sel in (".retour", ".projet-suite a"):
+            pg.goto(url, wait_until="networkidle")
+            pg.locator(sel).click()
+            pg.wait_for_load_state("networkidle")
+            ok(pg.url == base + ACCUEIL[lg] + "#confiance", f"projet {lg} : {sel} mène à la section ({pg.url})")
+        ok(not erreurs, f"projet {lg} : aucune erreur JS {erreurs[:3]}")
+        pg.close()
+
+        ctx = b.new_context(reduced_motion="reduce", viewport={"width": 1440, "height": 900})
+        pg = ctx.new_page()
+        pg.goto(url, wait_until="networkidle")
+        t = pg.evaluate("getComputedStyle(document.querySelector('.kl-grille a img')).transitionDuration")
+        ok(t in ("0s", "0s, 0s"), f"projet {lg} : mouvement réduit, transitions coupées ({t})")
+        ctx.close()
+
+        ctx = b.new_context(java_script_enabled=False, viewport={"width": 390, "height": 844})
+        pg = ctx.new_page()
+        pg.goto(url, wait_until="load")
+        ok(pg.locator(".projet-intro p").is_visible() and pg.locator(".kl-grille a").count() == 9, f"projet {lg} : lisible sans JS")
         ctx.close()
     b.close()
 
