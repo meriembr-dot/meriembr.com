@@ -117,6 +117,10 @@ img { display: block; max-width: 100%; }
 .projet-confiance img { width: 100%; height: auto; transition: transform .8s cubic-bezier(.2,.7,.2,1); }
 .projet-confiance:hover img, .projet-confiance:focus-visible img { transform: scale(1.03); }
 
+.projet-lien { position: relative; }
+.voir-projet { position: absolute; right: 1rem; bottom: 1rem; display: inline-flex; align-items: center; gap: .4rem; min-height: 40px; padding: 0 1.1rem; border-radius: 999px; background: rgb(14 14 16 / .82); color: var(--texte); font-size: .9rem; font-weight: 500; letter-spacing: .02em; backdrop-filter: blur(6px); transition: background .25s, color .25s; }
+.projet-lien:hover .voir-projet, .projet-lien:focus-visible .voir-projet { background: var(--accent); color: var(--fond); }
+
 /* Témoignages (section masquée tant qu'aucun texte n'est fourni) */
 .temoignages-liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }
 .temoignage { margin: 0; height: 100%; display: grid; align-content: space-between; gap: 1.5rem; padding: 2rem; background: var(--surface); border: 1px solid var(--ligne); border-radius: 10px; }
@@ -198,6 +202,53 @@ img { display: block; max-width: 100%; }
 .liens a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; }
 .liens a:hover { color: var(--texte); }
 .pied { padding: 2rem 0 3rem; color: var(--doux); font-size: .9rem; }
+
+/* Page projet : ouverture pleine largeur, en-tête éditorial, mosaïque calquée sur la composition de Meriem */
+.projet-ouverture { width: 100%; height: clamp(280px, 64svh, 720px); margin-top: 76px; object-fit: cover; object-position: 50% 80%; }
+.projet-entete { padding: 4.5rem 0 5rem; }
+.retour { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; margin-bottom: 2.5rem; color: var(--doux); text-decoration: none; transition: color .25s; }
+.retour:hover { color: var(--accent); }
+.projet-entete .surtitre { margin-bottom: 1rem; }
+.projet-nom { margin: 0 0 4rem; font: 500 clamp(3.2rem, 10vw, 8.5rem)/.95 var(--sans); letter-spacing: -.045em; }
+.projet-nom em { font: italic 400 1em var(--serif); color: var(--accent); }
+.projet-intro { display: grid; gap: 1.5rem 4rem; padding-top: 2rem; border-top: 1px solid var(--ligne); }
+.projet-intro h2 { margin: 0; font: 500 clamp(1.8rem, 3.6vw, 3rem)/1.05 var(--sans); letter-spacing: -.03em; }
+.projet-intro h2 em { font: italic 400 1.08em var(--serif); }
+.projet-intro p { max-width: 58ch; margin: 0 0 2rem; font-size: clamp(1.05rem, 1.4vw, 1.2rem); line-height: 1.6; }
+.supports { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; margin: 0; padding: 0; }
+.supports li { padding: .35rem .9rem; border: 1px solid var(--ligne); border-radius: 999px; color: var(--doux); font-size: .85rem; letter-spacing: .02em; }
+@media (min-width: 900px) { .projet-intro { grid-template-columns: 5fr 7fr; } }
+
+.projet .c { width: min(1120px, 100% - 3rem); }
+.mosaique-kl { container-type: inline-size; }
+.kl-grille { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: max(10px, 2cqi); }
+.tuile { grid-column: span 2; }
+.tuile > a, .tuile-logo { display: block; height: 100%; overflow: hidden; border-radius: 12px; background: var(--surface); }
+.tuile img { width: 100%; height: auto; }
+.tuile > a img { transition: transform .8s cubic-bezier(.2,.7,.2,1); }
+.tuile > a:hover img, .tuile > a:focus-visible img { transform: scale(1.03); }
+.tuile-logo { grid-column: auto; aspect-ratio: 1; background: #F1E7E1; }
+.tuile-logo img { height: 100%; object-fit: contain; }
+.t-slogo img { object-fit: cover; }
+.t-std img { object-position: 50% 60%; }
+@media (min-width: 600px) {
+  .kl-grille { grid-template-areas: "std std" "mono slogo" "fp fp" "pan plan" "carton menu" "livre livre" "bougie iris"; grid-template-rows: 60cqi 30cqi 57cqi 75cqi 50cqi 60cqi 36cqi; }
+  .tuile-logo { aspect-ratio: auto; }
+  .tuile img { height: 100%; object-fit: cover; }
+  .tuile-logo.t-mono img { object-fit: contain; }
+  .t-std { grid-area: std; } .t-mono { grid-area: mono; } .t-slogo { grid-area: slogo; } .t-fp { grid-area: fp; } .t-pan { grid-area: pan; } .t-plan { grid-area: plan; }
+  .t-carton { grid-area: carton; } .t-menu { grid-area: menu; } .t-livre { grid-area: livre; } .t-bougie { grid-area: bougie; } .t-iris { grid-area: iris; }
+}
+@media (min-width: 960px) {
+  /* Colonnes et rangées en proportions de K&L.jpg (1944 px de large) */
+  .kl-grille { grid-template-columns: 701fr 211fr 213fr 700fr; grid-template-areas: "mono std std std" "slogo std std std" "fp fp fp fp" "pan pan pan plan" "pan pan pan carton" "menu livre livre livre" "bougie bougie iris iris"; grid-template-rows: 15.4cqi 22.4cqi 57.2cqi 65cqi 35.1cqi 38.5cqi 35cqi; }
+}
+
+.projet-suite { margin-top: 7rem; border-top: 1px solid var(--ligne); }
+.projet-suite a { display: grid; gap: .6rem; padding: 3rem 0 2rem; text-decoration: none; }
+.suite-sur { color: var(--doux); font-size: .9rem; letter-spacing: .08em; text-transform: uppercase; }
+.suite-titre { font: 500 clamp(2.2rem, 6vw, 5rem)/1 var(--sans); letter-spacing: -.04em; transition: color .25s; }
+.projet-suite a:hover .suite-titre { color: var(--accent); }
 
 /* Visionneuse */
 .visionneuse { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgb(14 14 16 / .96); color: var(--texte); }

@@ -10,4 +10,14 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://meriembr.com/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://meriembr.com/en/"/>
   </url>
+  <url>
+    <loc>https://meriembr.com/projets/kais-et-lorine/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://meriembr.com/projets/kais-et-lorine/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://meriembr.com/en/projects/kais-et-lorine/"/>
+  </url>
+  <url>
+    <loc>https://meriembr.com/en/projects/kais-et-lorine/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://meriembr.com/projets/kais-et-lorine/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://meriembr.com/en/projects/kais-et-lorine/"/>
+  </url>
 </urlset>
